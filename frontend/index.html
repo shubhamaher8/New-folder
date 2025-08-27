@@ -373,8 +373,8 @@
                     <i class="material-icons">star</i>
                 </div>
                 <div class="card-title">Best Selling Product</div>
-                <div class="card-value">Item</div>
-                <div class="card-info">Best sold this month</div>
+                <div class="card-value" id="best-selling-product">Item</div>
+                <div class="card-info" id="best-selling-info">Best sold this month</div>
             </div>
         </div>
 
@@ -417,9 +417,6 @@
                 <div class="chart-header">
                     <div class="chart-title">Sales Overview</div>
                     <div class="chart-filters">
-                        <span class="chart-filter active" data-period="week">Week</span>
-                        <span class="chart-filter" data-period="month">Month</span>
-                        <span class="chart-filter" data-period="year">Year</span>
                     </div>
                 </div>
                 <div class="revenue-summary">
@@ -441,8 +438,6 @@
                 <div class="chart-header">
                     <div class="chart-title">Top Products</div>
                     <div class="chart-filters">
-                        <span class="chart-filter active">By Sales</span>
-                        <span class="chart-filter">By Revenue</span>
                     </div>
                 </div>
                 <div class="chart-container" id="products-chart">
@@ -567,7 +562,7 @@
         // Function to update the low stock count
         function updateLowStockCount() {
             // Consider items with quantity 5 or less as low stock
-            const lowStockItems = inventory.filter(item => item.stock <= 5).length;
+            const lowStockItems = inventory.filter(item => item.stock <= 10).length;
             document.getElementById('low-stock').textContent = lowStockItems;
         }
 
@@ -588,37 +583,40 @@
                 const saleDate = new Date(sale.saleDate);
                 return saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear;
             });
-    
-            if (currentMonthSales.length === 0) {
-                document.getElementById('best-selling-product').textContent = 'No sales this month';
-                document.getElementById('best-selling-info').textContent = '0 units sold';
-                return;
-            }
-    
-            // Aggregate quantity sold by product (assuming sales have 'productName' or 'productId')
+            
+            //best selling item
             const productSales = {};
             currentMonthSales.forEach(sale => {
-                const productKey = sale.productName || (products.find(p => p._id === sale.productId)?.name || 'Unknown');
-                if (!productSales[productKey]) {
-                    productSales[productKey] = 0;
+                let productId, productName;
+                if (sale.product && typeof sale.product === 'object') {
+                    productId = sale.product._id;
+                    productName = sale.product.name;
+                } else {
+                    productId = sale.productId || sale.product;
+                    const prod = products.find(p => p._id === productId);
+                    productName = prod ? prod.name : 'Unknown';
                 }
-                productSales[productKey] += sale.quantitySold || 0;
+                if (!productSales[productId]) {
+                    productSales[productId] = {
+                        name: productName,
+                        quantity: 0
+                    };
+                }
+                productSales[productId].quantity += sale.quantitySold;
             });
-    
-            // Find the product with the highest sales
-            let bestProduct = null;
-            let maxSales = 0;
-            for (const [product, salesCount] of Object.entries(productSales)) {
-                if (salesCount > maxSales) {
-                    maxSales = salesCount;
-                    bestProduct = product;
+
+            let bestProduct = { name: 'None', quantity: 0 };
+            for (const productId in productSales) {
+                if (productSales[productId].quantity > bestProduct.quantity) {
+                    bestProduct = productSales[productId];
                 }
             }
-    
+
             // Update the card
-            document.getElementById('best-selling-product').textContent = bestProduct || 'Unknown';
-            document.getElementById('best-selling-info').textContent = `${maxSales} units sold this month`;
+            document.getElementById('best-selling-product').textContent = bestProduct.name;
+            document.getElementById('best-selling-info').textContent = `${bestProduct.quantity} units sold this month`;
         }
+
 
         // Function to set up chart filters
         function setupChartFilters() {
