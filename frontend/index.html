@@ -196,6 +196,34 @@
             color: #777;
         }
 
+        /* Top Products List Styles */
+        .top-products-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .product-item:last-child {
+            border-bottom: none;
+        }
+        .product-name {
+            font-weight: 500;
+            color: #333;
+        }
+        .product-number {
+            font-weight: bold;
+            color: #000000;
+        }
+        .product-sales {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
         .revenue-summary {
             display: flex;
             justify-content: space-around;
@@ -440,8 +468,8 @@
                     <div class="chart-filters">
                     </div>
                 </div>
-                <div class="chart-container" id="products-chart">
-                    Products chart will be displayed here
+                <div class="top-products-list" id="top-products-list">
+                    <!-- Top products list will be displayed here -->
                 </div>
             </div>
         </div>
@@ -465,7 +493,6 @@
             loadOrders();
             loadSales();
             loadInventory();
-            updateTopProductsChart(); // Add this line
             setupChartFilters();
         });
 
@@ -508,12 +535,14 @@
                     updateMonthlySales();
                     updateSalesChart(currentPeriod);
                      updateBestSellingProduct();
+                     updateTopProductsChart();
                 })
                 .catch(error => {
                     console.error('Error loading sales:', error);
                     updateMonthlySales();
                     updateSalesChart(currentPeriod);
                     updateBestSellingProduct(); 
+                    updateTopProductsChart();
                 });
         }
 
@@ -639,10 +668,6 @@
                         if (this.dataset.period) {
                             currentPeriod = this.dataset.period;
                             updateSalesChart(currentPeriod);
-                        } else {
-                            // Toggle between sales and revenue view for top products
-                            const isSalesView = this.textContent === 'By Sales';
-                            updateTopProductsChart(isSalesView);
                         }
                     });
                 });
@@ -793,7 +818,7 @@
             });
         }
 
-        // Function to update the top products chart
+        // Function to update the top products list
         function updateTopProductsChart(isSalesView = true) {
             const currentDate = new Date();
             const currentMonth = currentDate.getMonth();
@@ -809,89 +834,47 @@
             const productSales = {};
             const productRevenue = {};
             currentMonthSales.forEach(sale => {
-                const productKey = sale.productName || (products.find(p => p._id === sale.productId)?.name || 'Unknown');
-                if (!productSales[productKey]) {
-                    productSales[productKey] = 0;
-                    productRevenue[productKey] = 0;
+                let productId, productName;
+                if (sale.product && typeof sale.product === 'object') {
+                    productId = sale.product._id;
+                    productName = sale.product.name;
+                } else {
+                    productId = sale.productId || sale.product;
+                    const prod = products.find(p => p._id === productId);
+                    productName = prod ? prod.name : 'Unknown';
                 }
-                productSales[productKey] += sale.quantitySold || 0;
-                productRevenue[productKey] += sale.totalRevenue || 0;
+                
+                if (!productSales[productName]) {
+                    productSales[productName] = 0;
+                    productRevenue[productName] = 0;
+                }
+                productSales[productName] += sale.quantitySold || 0;
+                productRevenue[productName] += sale.totalRevenue || 0;
             });
     
-            // Sort and get top 6 products
-            const sortedProducts = Object.entries(productSales)
+            // Sort and get top 5 products
+            const topProducts = Object.entries(productSales)
                 .map(([name, sales]) => ({ name, sales, revenue: productRevenue[name] }))
                 .sort((a, b) => (isSalesView ? b.sales - a.sales : b.revenue - a.revenue))
-                .slice(0, 6);
+                .slice(0, 5);
             
-
-            // Create the chart
-            const ctx = document.getElementById('products-chart').getContext('2d');
-            if (window.topProductsChart) {
-                window.topProductsChart.destroy();
+            // Create the list
+            const listContainer = document.getElementById('top-products-list');
+            listContainer.innerHTML = '';
+            
+            if (topProducts.length === 0) {
+                listContainer.innerHTML = '<p style="text-align: center; color: #777; padding: 20px;">No sales data available for this month</p>';
+                return;
             }
-
-            window.topProductsChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: topProducts.map(p => p.name),
-                    datasets: [{
-                        label: 'Sales',
-                        data: topProducts.map(p => p.sales),
-                        backgroundColor: [
-                            'rgba(76, 175, 80, 0.6)',  // Green
-                            'rgba(33, 150, 243, 0.6)', // Blue
-                            'rgba(255, 152, 0, 0.6)',  // Orange
-                            'rgba(156, 39, 176, 0.6)', // Purple
-                            'rgba(244, 67, 54, 0.6)',  // Red
-                            'rgba(0, 188, 212, 0.6)'   // Cyan
-                        ],
-                        borderColor: [
-                            'rgba(76, 175, 80, 1)',
-                            'rgba(33, 150, 243, 1)',
-                            'rgba(255, 152, 0, 1)',
-                            'rgba(156, 39, 176, 1)',
-                            'rgba(244, 67, 54, 1)',
-                            'rgba(0, 188, 212, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const product = topProducts[context.dataIndex];
-                                    return [
-                                        `Sales: ${product.sales} units`,
-                                        `Revenue: $${product.revenue.toLocaleString()}`
-                                    ];
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Units Sold'
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                maxRotation: 45,
-                                minRotation: 45
-                            }
-                        }
-                    }
-                }
+            
+            topProducts.forEach((product, index) => {
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+                productItem.innerHTML = `
+                    <div class="product-name"><span class="product-number">${index + 1}.</span> ${product.name}</div>
+                    <div class="product-sales">${product.sales} units</div>
+                `;
+                listContainer.appendChild(productItem);
             });
         }
     </script>
