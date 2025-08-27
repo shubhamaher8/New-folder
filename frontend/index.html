@@ -453,7 +453,7 @@
                         <div class="revenue-value" id="period-revenue">$0.00</div>
                     </div>
                     <div class="revenue-item">
-                        <div class="revenue-label">Average Daily Revenue</div>
+                        <div class="revenue-label">Average Quarterly Revenue</div>
                         <div class="revenue-value" id="average-daily-revenue">$0.00</div>
                     </div>
                 </div>
@@ -464,7 +464,7 @@
 
             <div class="chart-card">
                 <div class="chart-header">
-                    <div class="chart-title">Top Products</div>
+                    <div class="chart-title">Top Selling Products</div>
                     <div class="chart-filters">
                     </div>
                 </div>
@@ -484,7 +484,7 @@
         let sales = [];
         let inventory = [];
         let salesChart;
-        let currentPeriod = 'week';
+        let currentPeriod = 'quarter';
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
@@ -677,10 +677,9 @@
         // Function to format date for labels
         function formatDate(date, period) {
             switch(period) {
-                case 'week':
-                    return date.toLocaleDateString('en-US', { weekday: 'short' });
-                case 'month':
-                    return date.toLocaleDateString('en-US', { day: '2-digit' });
+                case 'quarter':
+                    const quarter = Math.floor(date.getMonth() / 3) + 1;
+                    return `Q${quarter} ${date.getFullYear()}`;
                 case 'year':
                     return date.toLocaleDateString('en-US', { month: 'short' });
             }
@@ -692,11 +691,8 @@
             const start = new Date();
             
             switch(period) {
-                case 'week':
-                    start.setDate(now.getDate() - 7);
-                    break;
-                case 'month':
-                    start.setMonth(now.getMonth() - 1);
+                case 'quarter':
+                    start.setMonth(now.getMonth() - 12); // Show last 12 months (4 quarters)
                     break;
                 case 'year':
                     start.setFullYear(now.getFullYear() - 1);
@@ -717,25 +713,38 @@
             while (current <= end) {
                 dateLabels.push(formatDate(current, period));
                 
-                // Find sales for this date
-                const daySales = sales.filter(sale => {
-                    const saleDate = new Date(sale.saleDate);
-                    return period === 'year' 
-                        ? saleDate.getFullYear() === current.getFullYear() && 
-                          saleDate.getMonth() === current.getMonth()
-                        : saleDate.getFullYear() === current.getFullYear() && 
-                          saleDate.getMonth() === current.getMonth() && 
-                          saleDate.getDate() === current.getDate();
-                });
+                // Find sales for this date period
+                let periodSales = [];
                 
-                const totalRevenue = daySales.reduce((sum, sale) => sum + sale.totalRevenue, 0);
+                if (period === 'quarter') {
+                    // For quarters, aggregate by quarter (3 months)
+                    const quarterStart = new Date(current.getFullYear(), Math.floor(current.getMonth() / 3) * 3, 1);
+                    const quarterEnd = new Date(current.getFullYear(), Math.floor(current.getMonth() / 3) * 3 + 3, 0);
+                    
+                    periodSales = sales.filter(sale => {
+                        const saleDate = new Date(sale.saleDate);
+                        return saleDate >= quarterStart && saleDate <= quarterEnd;
+                    });
+                } else {
+                    // For other periods, use existing logic
+                    periodSales = sales.filter(sale => {
+                        const saleDate = new Date(sale.saleDate);
+                        return period === 'year' 
+                            ? saleDate.getFullYear() === current.getFullYear() && 
+                              saleDate.getMonth() === current.getMonth()
+                            : saleDate.getFullYear() === current.getFullYear() && 
+                              saleDate.getMonth() === current.getMonth() && 
+                              saleDate.getDate() === current.getDate();
+                    });
+                }
+                
+                const totalRevenue = periodSales.reduce((sum, sale) => sum + sale.totalRevenue, 0);
                 salesData.push(totalRevenue);
                 
                 // Increment date based on period
                 switch(period) {
-                    case 'week':
-                    case 'month':
-                        current.setDate(current.getDate() + 1);
+                    case 'quarter':
+                        current.setMonth(current.getMonth() + 3); // Move to next quarter
                         break;
                     case 'year':
                         current.setMonth(current.getMonth() + 1);
@@ -752,14 +761,14 @@
             
             // Calculate total and average revenue
             const totalRevenue = data.reduce((sum, value) => sum + value, 0);
-            const avgDailyRevenue = totalRevenue / data.length;
+            const avgQuarterlyRevenue = period === 'quarter' ? totalRevenue / 4 : totalRevenue / data.length;
             
             // Update revenue display
             document.getElementById('period-revenue').textContent = '$' + totalRevenue.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
-            document.getElementById('average-daily-revenue').textContent = '$' + avgDailyRevenue.toLocaleString(undefined, {
+            document.getElementById('average-daily-revenue').textContent = '$' + avgQuarterlyRevenue.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
