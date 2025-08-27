@@ -1153,20 +1153,6 @@
                 })
                 .catch(error => {
                     console.error('Error updating product:', error);
-                    // For demo, update the product in our local array
-                    const index = products.findIndex(p => p._id === id);
-                    if (index !== -1) {
-                        products[index] = { ...products[index], ...updatedProduct };
-                        displayProducts();
-                        // Reset form and handler
-                        form.reset();
-                        submitBtn.textContent = 'Add Product';
-                        form.onsubmit = function(e) {
-                            e.preventDefault();
-                            addProduct();
-                        };
-                        alert('Product updated (demo mode)');
-                    }
                 });
             };
         }
