@@ -215,6 +215,7 @@
                     <input type="hidden" id="productsSupplied" name="productsSupplied">
                 </div>
                 <button type="submit">Add Supplier</button>
+                <button type="button" id="cancel-edit-btn" style="display: none; background-color: #666;">Cancel</button>
             </form>
         </div>
         
@@ -240,6 +241,7 @@
         let suppliers = [];
         let products = [];
         let selectedProducts = [];
+        let editingSupplierId = null;
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
@@ -252,12 +254,21 @@
             // Handle form submission
             document.getElementById('supplier-form').addEventListener('submit', function(e) {
                 e.preventDefault();
-                addSupplier();
+                if (editingSupplierId) {
+                    updateSupplier();
+                } else {
+                    addSupplier();
+                }
             });
             
             // Handle add product button
             document.getElementById('add-product-btn').addEventListener('click', function() {
                 addProductToSelection();
+            });
+            
+            // Handle cancel edit button
+            document.getElementById('cancel-edit-btn').addEventListener('click', function() {
+                resetForm();
             });
         });
 
@@ -409,24 +420,107 @@
             .then(response => response.json())
             .then(data => {
                 alert('Supplier added successfully!');
-                form.reset();
-                selectedProducts = [];
-                updateSelectedProductsDisplay();
+                resetForm();
                 loadSuppliers();
             })
             .catch(error => {
                 console.error('Error adding supplier:', error);
                 alert('Failed to add supplier. Please try again.');
-                form.reset();
-                selectedProducts = [];
-                updateSelectedProductsDisplay();
-                alert('Supplier added (demo mode)');
+                resetForm();
             });
         }
 
-        // Function to edit a supplier (placeholder)
+        // Function to update an existing supplier
+        function updateSupplier() {
+            const form = document.getElementById('supplier-form');
+            const name = form.name.value;
+            const email = form.email.value;
+            const phone = form.phone.value;
+            const address = form.address.value;
+            const productsSupplied = JSON.parse(form.productsSupplied.value || '[]');
+            
+            const supplier = {
+                name,
+                contactInfo: {
+                    email,
+                    phone,
+                    address
+                },
+                productsSupplied
+            };
+            
+            fetch(`http://localhost:3000/api/suppliers/${editingSupplierId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(supplier)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Supplier updated successfully!');
+                resetForm();
+                loadSuppliers();
+            })
+            .catch(error => {
+                console.error('Error updating supplier:', error);
+                alert('Failed to update supplier. Please try again.');
+            });
+        }
+
+        // Function to reset the form
+        function resetForm() {
+            const form = document.getElementById('supplier-form');
+            form.reset();
+            selectedProducts = [];
+            editingSupplierId = null;
+            updateSelectedProductsDisplay();
+            updateFormTitle();
+        }
+
+        // Function to update form title
+        function updateFormTitle() {
+            const formTitle = document.querySelector('#supplier-form-container h3');
+            const submitButton = document.querySelector('#supplier-form button[type="submit"]');
+            const cancelButton = document.getElementById('cancel-edit-btn');
+            
+            if (editingSupplierId) {
+                formTitle.textContent = 'Edit Supplier';
+                submitButton.textContent = 'Update Supplier';
+                cancelButton.style.display = 'inline-block';
+            } else {
+                formTitle.textContent = 'Add New Supplier';
+                submitButton.textContent = 'Add Supplier';
+                cancelButton.style.display = 'none';
+            }
+        }
+
+        // Function to edit a supplier
         function editSupplier(id) {
-            alert('Edit supplier with ID: ' + id + '\nThis feature is not fully implemented in this demo.');
+            const supplier = suppliers.find(s => s._id === id);
+            if (!supplier) {
+                alert('Supplier not found!');
+                return;
+            }
+            
+            // Set editing mode
+            editingSupplierId = id;
+            updateFormTitle();
+            
+            // Populate form with supplier data
+            const form = document.getElementById('supplier-form');
+            form.name.value = supplier.name;
+            form.email.value = supplier.contactInfo?.email || '';
+            form.phone.value = supplier.contactInfo?.phone || '';
+            form.address.value = supplier.contactInfo?.address || '';
+            
+            // Populate selected products
+            selectedProducts = supplier.productsSupplied || [];
+            updateSelectedProductsDisplay();
+            updateProductsHiddenField();
+            
+            // Scroll to form
+            document.getElementById('supplier-form-container').scrollIntoView({ behavior: 'smooth' });
         }
 
         // Function to delete a supplier

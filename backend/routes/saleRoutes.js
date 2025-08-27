@@ -55,4 +55,17 @@ router.get('/range', async (req, res) => {
   }
 });
 
+// Delete a sale
+router.delete('/:id', async (req, res) => {
+  try {
+    const sale = await Sale.findByIdAndDelete(req.params.id);
+    if (!sale) {
+      return res.status(404).json({ error: 'Sale not found' });
+    }
+    res.json({ message: 'Sale deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

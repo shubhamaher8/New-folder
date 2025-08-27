@@ -24,4 +24,36 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Update a supplier
+router.put('/:id', async (req, res) => {
+  try {
+    const { name, contactInfo, productsSupplied } = req.body;
+    const supplier = await Supplier.findByIdAndUpdate(
+      req.params.id,
+      { name, contactInfo, productsSupplied },
+      { new: true, runValidators: true }
+    ).populate('productsSupplied');
+    
+    if (!supplier) {
+      return res.status(404).json({ error: 'Supplier not found' });
+    }
+    res.json(supplier);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Delete a supplier
+router.delete('/:id', async (req, res) => {
+  try {
+    const supplier = await Supplier.findByIdAndDelete(req.params.id);
+    if (!supplier) {
+      return res.status(404).json({ error: 'Supplier not found' });
+    }
+    res.json({ message: 'Supplier deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

@@ -428,7 +428,7 @@
 
         // Function to load products
         function loadProducts() {
-            fetch('http://localhost:3000/products')
+            fetch('http://localhost:3000/api/products')
                 .then(response => response.json())
                 .then(data => {
                     products = data;
@@ -440,7 +440,7 @@
 
         // Function to load sales
         function loadSales() {
-            fetch('http://localhost:3000/sales')
+            fetch('http://localhost:3000/api/sales')
                 .then(response => response.json())
                 .then(data => {
                     sales = data;
@@ -655,12 +655,6 @@
             .catch(error => {
                 console.error('Error saving report:', error);
                 alert('Failed to save report. Please try again.');
-                reports.push(newReport);
-                displayReports();
-                document.getElementById('report-form').reset();
-                document.getElementById('report-preview').style.display = 'none';
-                switchTab('reports-list-tab');
-                alert('Report saved (demo mode)');
             });
         }
 
@@ -729,10 +723,6 @@
                 })
                 .catch(error => {
                     console.error('Error deleting report:', error);
-                    // For demo, remove from local array and refresh
-                    reports = reports.filter(report => report._id !== reportId);
-                    displayReports();
-                    alert('Report deleted (demo mode)');
                 });
             }
         }
