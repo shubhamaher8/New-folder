@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStock - Sales Reports</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            border-bottom: 2px solid #f2f2f2;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-danger {
+            background-color: #f44336;
+        }
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+        .btn-info {
+            background-color: #2196F3;
+        }
+        .btn-info:hover {
+            background-color: #0b7dda;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        /* Dashboard Styles */
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .dashboard-card {
+            flex: 1;
+            min-width: 200px;
+            background-color: white;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .card-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .card-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Filter Controls */
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: flex-end;
+        }
+        .filter-control {
+            flex: 1;
+        }
+        
+        /* Chart Styles */
+        .chart-container {
+            height: 300px;
+            margin-bottom: 30px;
+        }
+        
+        /* Report Detail Styles */
+        .report-detail {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .report-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .report-period {
+            color: #666;
+        }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .detail-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        .item-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .item-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .best-seller {
+            grid-column: span 3;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 2px solid white;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Navigation Styles */
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            background-color: #444;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            margin: 0 5px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+        .nav-links a:hover {
+            background-color: #4CAF50;
+        }
+        .nav-links a.active {
+            background-color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SmartStock</h1>
+    </header>
+    
+    <div class="container">
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="products.html">Products</a>
+            <a href="inventory.html">Inventory</a>
+            <a href="orders.html">Orders</a>
+            <a href="suppliers.html">Suppliers</a>
+            <a href="sales.html">Sales</a>
+            <a href="sales-reports.html" class="active">Reports</a>
+        </div>
+        
+        <h2>Sales Reports</h2>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('reports-list-tab')">Reports List</div>
+            <div class="tab" onclick="switchTab('generate-report-tab')">Generate Report</div>
+        </div>
+        
+        <div id="reports-list-tab" class="tab-content active">
+            <div class="dashboard">
+                <div class="dashboard-card">
+                    <div class="card-title">Total Sales (All Time)</div>
+                    <div class="card-value" id="total-sales-all">0</div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="card-title">Total Revenue (All Time)</div>
+                    <div class="card-value" id="total-revenue-all">$0.00</div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="card-title">Sales Reports Generated</div>
+                    <div class="card-value" id="total-reports">0</div>
+                </div>
+            </div>
+            
+            <h3>Available Reports</h3>
+            <table id="reports-table">
+                <thead>
+                    <tr>
+                        <th>Report Period</th>
+                        <th>Total Sales</th>
+                        <th>Total Revenue</th>
+                        <th>Best Selling Product</th>
+                        <th>Generated On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="reports-list">
+                    <!-- Reports will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="generate-report-tab" class="tab-content">
+            <h3>Generate New Report</h3>
+            <form id="report-form">
+                <div class="form-group">
+                    <label for="reportPeriod">Report Period</label>
+                    <select id="reportPeriod" name="reportPeriod" required>
+                        <option value="">Select a period</option>
+                        <option value="current-month">Current Month</option>
+                        <option value="previous-month">Previous Month</option>
+                        <option value="current-quarter">Current Quarter</option>
+                        <option value="previous-quarter">Previous Quarter</option>
+                        <option value="current-year">Current Year</option>
+                        <option value="previous-year">Previous Year</option>
+                        <option value="custom">Custom Period</option>
+                    </select>
+                </div>
+                
+                <div id="custom-period" style="display: none;">
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate" name="startDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">End Date</label>
+                        <input type="date" id="endDate" name="endDate">
+                    </div>
+                </div>
+                
+                <button type="submit">Generate Report</button>
+            </form>
+            
+            <div id="report-preview" style="display: none; margin-top: 30px;">
+                <h3>Report Preview</h3>
+                <div class="report-detail">
+                    <div class="detail-header">
+                        <p class="report-title">Sales Report</p>
+                        <p class="report-period" id="preview-period">Period: January 2023</p>
+                    </div>
+                    
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="item-label">Total Sales</div>
+                            <div class="item-value" id="preview-sales">0</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="item-label">Total Revenue</div>
+                            <div class="item-value" id="preview-revenue">$0.00</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="item-label">Average Sale Value</div>
+                            <div class="item-value" id="preview-average">$0.00</div>
+                        </div>
+                        <div class="detail-item best-seller">
+                            <div class="item-label">Best Selling Product</div>
+                            <div class="item-value" id="preview-bestseller">None</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="saveReport()">Save Report</button>
+            </div>
+        </div>
+        
+        <div id="report-detail-view" style="display: none;">
+            <h3>Report Details</h3>
+            <div class="report-detail" id="report-detail-content">
+                <!-- Report details will be filled here -->
+            </div>
+            
+            <button onclick="backToReportsList()">Back to Reports List</button>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let reports = [];
+        let sales = [];
+        let products = [];
+        let reportPreviewData = null;
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load initial data
+            loadReports();
+            loadSales();
+            loadProducts();
+            
+            // Handle report form submission
+            document.getElementById('report-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                generateReportPreview();
+            });
+            
+            // Handle period selection change
+            document.getElementById('reportPeriod').addEventListener('change', function() {
+                const customPeriod = document.getElementById('custom-period');
+                if (this.value === 'custom') {
+                    customPeriod.style.display = 'block';
+                } else {
+                    customPeriod.style.display = 'none';
+                }
+            });
+        });
+
+        // Function to switch tabs
+        function switchTab(tabId) {
+            // Hide all tab contents
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            // Remove active class from all tabs
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            // Show selected tab content and set tab as active
+            document.getElementById(tabId).classList.add('active');
+            const selectedTab = Array.from(tabs).find(tab => tab.getAttribute('onclick').includes(tabId));
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+            
+            // Hide report detail view when switching tabs
+            document.getElementById('report-detail-view').style.display = 'none';
+        }
+
+        // Function to load products
+        function loadProducts() {
+            fetch('http://localhost:3000/products')
+                .then(response => response.json())
+                .then(data => {
+                    products = data;
+                })
+                .catch(error => {
+                    console.error('Error loading products:', error);
+                    // For demo purposes, add some sample products if API is not available
+                    products = [
+                        { _id: '1', name: 'Sample Product 1', sku: 'ELEC001' },
+                        { _id: '2', name: 'Sample Product 2', sku: 'CLOTH001' },
+                        { _id: '3', name: 'Sample Product 3', sku: 'HOME001' },
+                        { _id: '4', name: 'Sample Product 4', sku: 'ELEC002' },
+                        { _id: '5', name: 'Sample Product 5', sku: 'TOYS001' }
+                    ];
+                });
+        }
+
+        // Function to load sales
+        function loadSales() {
+            fetch('http://localhost:3000/sales')
+                .then(response => response.json())
+                .then(data => {
+                    sales = data;
+                    updateDashboard();
+                })
+                .catch(error => {
+                    console.error('Error loading sales:', error);
+                    // For demo purposes, add some sample sales if API is not available
+                    const today = new Date();
+                    const lastMonth = new Date(today);
+                    lastMonth.setMonth(lastMonth.getMonth() - 1);
+                    
+                    sales = [
+                        { 
+                            _id: '1', 
+                            product: { _id: '1', name: 'Sample Product 1', sku: 'ELEC001' }, 
+                            quantitySold: 10, 
+                            totalRevenue: 199.90,
+                            saleDate: today
+                        },
+                        { 
+                            _id: '2', 
+                            product: { _id: '2', name: 'Sample Product 2', sku: 'CLOTH001' }, 
+                            quantitySold: 5, 
+                            totalRevenue: 149.95,
+                            saleDate: today
+                        },
+                        { 
+                            _id: '3', 
+                            product: { _id: '1', name: 'Sample Product 1', sku: 'ELEC001' }, 
+                            quantitySold: 8, 
+                            totalRevenue: 159.92,
+                            saleDate: lastMonth
+                        }
+                    ];
+                    updateDashboard();
+                });
+        }
+
+        // Function to load reports
+        function loadReports() {
+            fetch('http://localhost:3000/api/sales-reports')
+                .then(response => response.json())
+                .then(data => {
+                    reports = data;
+                    displayReports();
+                    updateDashboard();
+                })
+                .catch(error => {
+                    console.error('Error loading reports:', error);
+                    // For demo purposes, add some sample reports if API is not available
+                    reports = [
+                        { 
+                            _id: '1', 
+                            reportPeriod: 'April 2023', 
+                            totalSales: 25, 
+                            totalRevenue: 599.75,
+                            bestSellingProduct: { _id: '1', name: 'Sample Product 1' },
+                            createdAt: new Date(Date.now() - 2592000000) // 30 days ago
+                        },
+                        { 
+                            _id: '2', 
+                            reportPeriod: 'March 2023', 
+                            totalSales: 18, 
+                            totalRevenue: 429.82,
+                            bestSellingProduct: { _id: '2', name: 'Sample Product 2' },
+                            createdAt: new Date(Date.now() - 5184000000) // 60 days ago
+                        }
+                    ];
+                    displayReports();
+                    updateDashboard();
+                });
+        }
+
+        // Function to display reports in the table
+        function displayReports() {
+            const reportsList = document.getElementById('reports-list');
+            reportsList.innerHTML = '';
+            
+            // Sort reports by date (newest first)
+            reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            reports.forEach(report => {
+                const row = document.createElement('tr');
+                const createdDate = new Date(report.createdAt).toLocaleDateString();
+                
+                row.innerHTML = `
+                    <td>${report.reportPeriod}</td>
+                    <td>${report.totalSales}</td>
+                    <td>$${report.totalRevenue.toFixed(2)}</td>
+                    <td>${report.bestSellingProduct ? report.bestSellingProduct.name : 'None'}</td>
+                    <td>${createdDate}</td>
+                    <td class="actions">
+                        <button class="btn-info" onclick="viewReportDetails('${report._id}')">View</button>
+                        <button class="btn-danger" onclick="deleteReport('${report._id}')">Delete</button>
+                    </td>
+                `;
+                reportsList.appendChild(row);
+            });
+            
+            // Update total reports count
+            document.getElementById('total-reports').textContent = reports.length;
+        }
+
+        // Function to update the dashboard
+        function updateDashboard() {
+            // Calculate total sales and revenue (all time)
+            const totalSales = sales.reduce((total, sale) => total + sale.quantitySold, 0);
+            const totalRevenue = sales.reduce((total, sale) => total + sale.totalRevenue, 0);
+            
+            // Update dashboard values
+            document.getElementById('total-sales-all').textContent = totalSales;
+            document.getElementById('total-revenue-all').textContent = `$${totalRevenue.toFixed(2)}`;
+        }
+
+        // Function to generate a report preview
+        function generateReportPreview() {
+            const periodType = document.getElementById('reportPeriod').value;
+            
+            if (!periodType) {
+                alert('Please select a report period');
+                return;
+            }
+            
+            // Calculate date range based on selected period
+            let startDate, endDate, periodName;
+            const now = new Date();
+            
+            switch (periodType) {
+                case 'current-month':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                    periodName = `${startDate.toLocaleString('default', { month: 'long' })} ${startDate.getFullYear()}`;
+                    break;
+                case 'previous-month':
+                    startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), 0);
+                    periodName = `${startDate.toLocaleString('default', { month: 'long' })} ${startDate.getFullYear()}`;
+                    break;
+                case 'current-quarter':
+                    const quarter = Math.floor(now.getMonth() / 3);
+                    startDate = new Date(now.getFullYear(), quarter * 3, 1);
+                    endDate = new Date(now.getFullYear(), (quarter + 1) * 3, 0);
+                    periodName = `Q${quarter + 1} ${startDate.getFullYear()}`;
+                    break;
+                case 'previous-quarter':
+                    const prevQuarter = (Math.floor(now.getMonth() / 3) + 3) % 4;
+                    const yearAdjustment = prevQuarter === 3 ? -1 : 0;
+                    startDate = new Date(now.getFullYear() + yearAdjustment, prevQuarter * 3, 1);
+                    endDate = new Date(now.getFullYear() + yearAdjustment, (prevQuarter + 1) * 3, 0);
+                    periodName = `Q${prevQuarter + 1} ${startDate.getFullYear()}`;
+                    break;
+                case 'current-year':
+                    startDate = new Date(now.getFullYear(), 0, 1);
+                    endDate = new Date(now.getFullYear(), 11, 31);
+                    periodName = `${startDate.getFullYear()}`;
+                    break;
+                case 'previous-year':
+                    startDate = new Date(now.getFullYear() - 1, 0, 1);
+                    endDate = new Date(now.getFullYear() - 1, 11, 31);
+                    periodName = `${startDate.getFullYear()}`;
+                    break;
+                case 'custom':
+                    startDate = new Date(document.getElementById('startDate').value);
+                    endDate = new Date(document.getElementById('endDate').value);
+                    
+                    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+                        alert('Please enter valid dates for custom period');
+                        return;
+                    }
+                    
+                    if (startDate > endDate) {
+                        alert('Start date cannot be after end date');
+                        return;
+                    }
+                    
+                    periodName = `${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`;
+                    break;
+            }
+            
+            // Filter sales within the date range
+            const filteredSales = sales.filter(sale => {
+                const saleDate = new Date(sale.saleDate);
+                return saleDate >= startDate && saleDate <= endDate;
+            });
+            
+            // Calculate report data
+            const totalSales = filteredSales.reduce((total, sale) => total + sale.quantitySold, 0);
+            const totalRevenue = filteredSales.reduce((total, sale) => total + sale.totalRevenue, 0);
+            const averageSaleValue = totalSales > 0 ? totalRevenue / totalSales : 0;
+            
+            // Find best selling product
+            const productSales = {};
+            filteredSales.forEach(sale => {
+                const productId = sale.product._id;
+                if (!productSales[productId]) {
+                    productSales[productId] = {
+                        productId: productId,
+                        name: sale.product.name,
+                        quantity: 0
+                    };
+                }
+                productSales[productId].quantity += sale.quantitySold;
+            });
+            
+            let bestSellingProduct = { name: 'None', quantity: 0 };
+            for (const productId in productSales) {
+                if (productSales[productId].quantity > bestSellingProduct.quantity) {
+                    bestSellingProduct = {
+                        productId: productSales[productId].productId,
+                        name: productSales[productId].name,
+                        quantity: productSales[productId].quantity
+                    };
+                }
+            }
+            
+            // Store preview data for saving
+            reportPreviewData = {
+                reportPeriod: periodName,
+                totalSales: totalSales,
+                totalRevenue: totalRevenue,
+                bestSellingProduct: bestSellingProduct.productId === undefined ? null : bestSellingProduct.productId
+            };
+            
+            // Update preview display
+            document.getElementById('preview-period').textContent = `Period: ${periodName}`;
+            document.getElementById('preview-sales').textContent = totalSales;
+            document.getElementById('preview-revenue').textContent = `$${totalRevenue.toFixed(2)}`;
+            document.getElementById('preview-average').textContent = `$${averageSaleValue.toFixed(2)}`;
+            document.getElementById('preview-bestseller').textContent = 
+                `${bestSellingProduct.name} (${bestSellingProduct.quantity} units)`;
+            
+            // Show preview
+            document.getElementById('report-preview').style.display = 'block';
+        }
+
+        // Function to save the generated report
+        function saveReport() {
+            if (!reportPreviewData) {
+                alert('Please generate a report first');
+                return;
+            }
+            
+            fetch('http://localhost:3000/api/sales-reports', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(reportPreviewData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Report saved successfully!');
+                document.getElementById('report-form').reset();
+                document.getElementById('report-preview').style.display = 'none';
+                loadReports();
+                switchTab('reports-list-tab');
+            })
+            .catch(error => {
+                console.error('Error saving report:', error);
+                alert('Failed to save report. Please try again.');
+                // For demo, add to local array and refresh
+                const newReport = {
+                    _id: Date.now().toString(),
+                    ...reportPreviewData,
+                    bestSellingProduct: products.find(p => p._id === reportPreviewData.bestSellingProduct) || null,
+                    createdAt: new Date()
+                };
+                reports.push(newReport);
+                displayReports();
+                document.getElementById('report-form').reset();
+                document.getElementById('report-preview').style.display = 'none';
+                switchTab('reports-list-tab');
+                alert('Report saved (demo mode)');
+            });
+        }
+
+        // Function to view report details
+        function viewReportDetails(reportId) {
+            const report = reports.find(r => r._id === reportId);
+            
+            if (report) {
+                // Hide tabs content and show detail view
+                document.getElementsByClassName('tab-content active')[0].classList.remove('active');
+                document.getElementById('report-detail-view').style.display = 'block';
+                
+                const detailContent = document.getElementById('report-detail-content');
+                const createdDate = new Date(report.createdAt).toLocaleDateString();
+                
+                detailContent.innerHTML = `
+                    <div class="detail-header">
+                        <p class="report-title">Sales Report</p>
+                        <p class="report-period">Period: ${report.reportPeriod}</p>
+                    </div>
+                    
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="item-label">Total Sales</div>
+                            <div class="item-value">${report.totalSales}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="item-label">Total Revenue</div>
+                            <div class="item-value">$${report.totalRevenue.toFixed(2)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="item-label">Average Sale Value</div>
+                            <div class="item-value">$${(report.totalRevenue / report.totalSales).toFixed(2)}</div>
+                        </div>
+                        <div class="detail-item best-seller">
+                            <div class="item-label">Best Selling Product</div>
+                            <div class="item-value">${report.bestSellingProduct ? report.bestSellingProduct.name : 'None'}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="item-label" style="margin-top: 15px;">Report Generated On</div>
+                    <div class="item-value" style="font-size: 14px;">${createdDate}</div>
+                `;
+            }
+        }
+
+        // Function to go back to reports list
+        function backToReportsList() {
+            document.getElementById('report-detail-view').style.display = 'none';
+            document.getElementById('reports-list-tab').classList.add('active');
+        }
+
+        // Function to delete a report
+        function deleteReport(reportId) {
+            if (confirm('Are you sure you want to delete this report?')) {
+                fetch(`http://localhost:3000/api/sales-reports/${reportId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Report deleted successfully!');
+                        loadReports();
+                    } else {
+                        throw new Error('Failed to delete report');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting report:', error);
+                    // For demo, remove from local array and refresh
+                    reports = reports.filter(report => report._id !== reportId);
+                    displayReports();
+                    alert('Report deleted (demo mode)');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

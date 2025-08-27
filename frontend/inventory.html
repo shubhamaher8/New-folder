@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStock - Inventory</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            border-bottom: 2px solid #f2f2f2;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-danger {
+            background-color: #f44336;
+        }
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+        .btn-info {
+            background-color: #2196F3;
+        }
+        .btn-info:hover {
+            background-color: #0b7dda;
+        }
+        .btn-warning {
+            background-color: #ff9800;
+        }
+        .btn-warning:hover {
+            background-color: #e68a00;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        /* Status Styles */
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .status-low {
+            background-color: #ffeb3b;
+            color: #333;
+        }
+        .status-out {
+            background-color: #f44336;
+            color: white;
+        }
+        .status-good {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* Navigation Styles */
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            background-color: #444;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            margin: 0 5px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+        .nav-links a:hover {
+            background-color: #4CAF50;
+        }
+        .nav-links a.active {
+            background-color: #4CAF50;
+        }
+
+        /* View Toggle Styles */
+        .view-mode-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        .view-mode-toggle button {
+            margin: 0 15px;
+            background-color: transparent;
+            color: #333;
+            border: none;
+            font-weight: bold;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .view-mode-toggle button.active {
+            color: #4CAF50;
+            border-bottom: 2px solid #4CAF50;
+        }
+        .view-mode-toggle button:hover {
+            color: #4CAF50;
+            background-color: transparent;
+        }
+
+        /* Grid View Styles */
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .inventory-card {
+            background-color: white;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .inventory-card:hover {
+            transform: translateY(-5px);
+        }
+        .item-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .item-quantity {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .item-quantity.low {
+            color: #f44336;
+        }
+        .item-quantity.medium {
+            color: #ff9800;
+        }
+        .item-quantity.high {
+            color: #4CAF50;
+        }
+        .item-sku {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+        .item-location {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .item-updated {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .item-action {
+            display: inline-block;
+            background-color: #2196F3;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .item-action:hover {
+            background-color: #0b7dda;
+        }
+
+        /* Detail View Styles */
+        .item-details {
+            margin-bottom: 20px;
+        }
+        .detail-row {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+        .detail-label {
+            font-weight: bold;
+            width: 150px;
+        }
+        .detail-value {
+            flex: 1;
+        }
+        
+        /* View Containers */
+        #table-view, #grid-view, #detail-view {
+            display: none;
+        }
+        #table-view.active, #grid-view.active, #detail-view.active {
+            display: block;
+        }
+
+        /* Transaction History */
+        .transaction-history {
+            margin-top: 20px;
+        }
+        .transaction-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .transaction-date {
+            font-size: 12px;
+            color: #999;
+        }
+        .transaction-type {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .transaction-type.in {
+            color: #4CAF50;
+        }
+        .transaction-type.out {
+            color: #f44336;
+        }
+        .transaction-quantity {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SmartStock</h1>
+    </header>
+    
+    <div class="container">
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="products.html">Products</a>
+            <a href="inventory.html" class="active">Inventory</a>
+            <a href="orders.html">Orders</a>
+            <a href="suppliers.html">Suppliers</a>
+            <a href="sales.html">Sales</a>
+            <a href="sales-reports.html">Reports</a>
+        </div>
+        
+        <h2>Inventory Management</h2>
+        
+        <div class="view-mode-toggle">
+            <button id="table-view-btn" class="active">Table View</button>
+            <button id="grid-view-btn">Grid View</button>
+        </div>
+        
+        <div id="inventory-form-container">
+            <h3>Update Inventory</h3>
+            <form id="inventory-form">
+                <div class="form-group">
+                    <label for="product">Product</label>
+                    <select id="product" name="product" required>
+                        <option value="">Select a product</option>
+                        <!-- Products will be loaded here -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" id="quantity" name="quantity" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" name="notes" rows="3"></textarea>
+                </div>
+                <button type="submit">Update Inventory</button>
+            </form>
+        </div>
+        
+        <div id="table-view" class="active">
+            <h3>Current Inventory - Table View</h3>
+            <table id="inventory-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Last Updated</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="inventory-list">
+                    <!-- Inventory items will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="grid-view">
+            <h3>Current Inventory - Grid View</h3>
+            <div id="inventory-grid" class="inventory-grid">
+                <!-- Inventory cards will be loaded here -->
+            </div>
+        </div>
+        
+        <div id="detail-view">
+            <h3>Inventory Item Details</h3>
+            <button onclick="backToLastView()" class="btn-info">Back to List</button>
+            <div id="item-details" class="item-details">
+                <!-- Item details will be loaded here -->
+            </div>
+            <div class="transaction-history">
+                <h4>Transaction History</h4>
+                <div id="transaction-list">
+                    <!-- Transaction history will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+
+        
+        <div id="history-view" style="display: none;">
+            <h3>Inventory History</h3>
+            <table id="history-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th>Quantity Change</th>
+                        <th>New Quantity</th>
+                        <th>Date</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="history-list">
+                    <!-- History items will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let inventoryItems = [];
+        let products = [];
+        let currentItemId = null;
+        let lastActiveView = 'table-view';
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load products first (needed for the form)
+            loadProducts();
+            
+            // Load inventory when page loads
+            loadInventory();
+            
+            // Handle form submission
+            document.getElementById('inventory-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                updateInventory();
+            });
+
+            // Add event listeners for view toggle buttons
+            document.getElementById('table-view-btn').addEventListener('click', function() {
+                switchView('table-view');
+            });
+            
+            document.getElementById('grid-view-btn').addEventListener('click', function() {
+                switchView('grid-view');
+            });
+            
+            document.getElementById('inventory-view-btn').addEventListener('click', function() {
+                document.getElementById('inventory-view').style.display = 'block';
+                document.getElementById('history-view').style.display = 'none';
+                this.classList.add('active');
+                document.getElementById('history-view-btn').classList.remove('active');
+            });
+            
+            document.getElementById('history-view-btn').addEventListener('click', function() {
+                document.getElementById('inventory-view').style.display = 'none';
+                document.getElementById('history-view').style.display = 'block';
+                this.classList.add('active');
+                document.getElementById('inventory-view-btn').classList.remove('active');
+            });
+
+            // Check if URL has an item ID parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const itemId = urlParams.get('id');
+            
+            if (itemId) {
+                loadItemDetails(itemId);
+                switchView('detail-view');
+            }
+        });
+
+        // View switching function
+        function switchView(viewId) {
+            // Hide all views
+            document.getElementById('table-view').classList.remove('active');
+            document.getElementById('grid-view').classList.remove('active');
+            document.getElementById('detail-view').classList.remove('active');
+            
+            // Remove active class from all buttons
+            document.getElementById('table-view-btn').classList.remove('active');
+            document.getElementById('grid-view-btn').classList.remove('active');
+            
+            // Show selected view
+            document.getElementById(viewId).classList.add('active');
+            
+            // Set active button
+            if (viewId !== 'detail-view') {
+                document.getElementById(viewId + '-btn').classList.add('active');
+                lastActiveView = viewId;
+            }
+
+            // Update URL if showing detail view with an item ID
+            if (viewId === 'detail-view' && currentItemId) {
+                history.pushState({ id: currentItemId }, '', `?id=${currentItemId}`);
+            } else if (viewId !== 'detail-view') {
+                history.pushState({}, '', window.location.pathname);
+            }
+        }
+
+        // Back button function
+        function backToLastView() {
+            switchView(lastActiveView);
+        }
+
+        // Function to load products for the dropdown
+        function loadProducts() {
+            fetch('http://localhost:3000/api/products')
+                .then(response => response.json())
+                .then(data => {
+                    products = data;
+                    populateProductDropdown();
+                })
+                .catch(error => {
+                    console.error('Error loading products:', error);
+                    // For demo purposes, add some sample products if API is not available
+                    products = [
+                        { _id: '1', name: 'Sample Product 1', sku: 'ELEC001', price: 19.99, description: 'This is a sample product' },
+                        { _id: '2', name: 'Sample Product 2', sku: 'CLOTH001', price: 29.99, description: 'Another sample product' },
+                        { _id: '3', name: 'Sample Product 3', sku: 'HOME001', price: 39.99, description: 'Third sample product' },
+                        { _id: '4', name: 'Sample Product 4', sku: 'ELEC002', price: 49.99, description: 'Fourth sample product' },
+                        { _id: '5', name: 'Sample Product 5', sku: 'TOYS001', price: 59.99, description: 'Fifth sample product' }
+                    ];
+                    populateProductDropdown();
+                });
+        }
+
+        // Function to populate product dropdown
+        function populateProductDropdown() {
+            const productSelect = document.getElementById('product');
+            productSelect.innerHTML = '<option value="">Select a product</option>';
+            
+            products.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product._id;
+                option.textContent = `${product.name} (${product.sku})`;
+                productSelect.appendChild(option);
+            });
+        }
+
+        // Function to load inventory from API
+        function loadInventory() {
+            fetch('http://localhost:3000/api/inventory')
+                .then(response => response.json())
+                .then(data => {
+                    inventoryItems = data;
+                    displayInventory();
+                })
+                .catch(error => {
+                    console.error('Error loading inventory:', error);
+                    // For demo purposes, add some sample inventory items if API is not available
+                    inventoryItems = [
+                        { _id: '1', product: { _id: '1', name: 'Sample Product 1', sku: 'ELEC001' }, stock: 25, lastUpdated: new Date() },
+                        { _id: '2', product: { _id: '2', name: 'Sample Product 2', sku: 'CLOTH001' }, stock: 5, lastUpdated: new Date() },
+                        { _id: '3', product: { _id: '3', name: 'Sample Product 3', sku: 'HOME001' }, stock: 0, lastUpdated: new Date() },
+                        { _id: '4', product: { _id: '4', name: 'Sample Product 4', sku: 'ELEC002' }, stock: 50, lastUpdated: new Date() },
+                        { _id: '5', product: { _id: '5', name: 'Sample Product 5', sku: 'TOYS001' }, stock: 12, lastUpdated: new Date() }
+                    ];
+                    displayInventory();
+                });
+        }
+
+        // Function to display inventory in all views
+        function displayInventory() {
+            displayInventoryTable();
+            displayInventoryGrid();
+        }
+
+        // Function to display inventory in the table
+        function displayInventoryTable() {
+            const inventoryList = document.getElementById('inventory-list');
+            inventoryList.innerHTML = '';
+            
+            inventoryItems.forEach(item => {
+                const row = document.createElement('tr');
+                const statusClass = getStatusClass(item.stock);
+                
+                row.innerHTML = `
+                    <td><a href="javascript:void(0)" onclick="viewItemDetails('${item._id}')">${item.product.name}</a></td>
+                    <td>${item.product.sku}</td>
+                    <td>${item.stock}</td>
+                    <td>${getStatusText(item.stock)}</td>
+                    <td>${new Date(item.lastUpdated).toLocaleString()}</td>
+                    <td class="actions">
+                        <button class="btn-info" onclick="adjustStock('${item._id}', 'add')">+ Add</button>
+                        <button class="btn-warning" onclick="adjustStock('${item._id}', 'remove')">- Remove</button>
+                        <button class="btn-danger" onclick="deleteItem('${item._id}')">Delete</button>
+                    </td>
+                `;
+                inventoryList.appendChild(row);
+            });
+        }
+
+        // Function to display inventory in the grid
+        function displayInventoryGrid() {
+            const inventoryGrid = document.getElementById('inventory-grid');
+            inventoryGrid.innerHTML = '';
+            
+            inventoryItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'inventory-card';
+                const quantityClass = getStatusClass(item.stock);
+                
+                card.innerHTML = `
+                    <div class="item-name">${item.product.name}</div>
+                    <div class="item-quantity ${quantityClass}">Quantity: ${item.stock}</div>
+                    <div class="item-sku">SKU: ${item.product.sku}</div>
+                    <div class="item-updated">Updated: ${new Date(item.lastUpdated).toLocaleString()}</div>
+                    <button class="item-action" onclick="viewItemDetails('${item._id}')">View Details</button>
+                `;
+                inventoryGrid.appendChild(card);
+            });
+        }
+
+        // Function to get status class based on quantity
+        function getStatusClass(stock) {
+            if (stock <= 0) return 'low';
+            if (stock <= 10) return 'medium'; // Using 10 as default threshold
+            return 'high';
+        }
+
+        // Function to get status text based on quantity
+        function getStatusText(stock) {
+            if (stock <= 0) return 'Out of Stock';
+            if (stock <= 10) return 'Low Stock';
+            return 'In Stock';
+        }
+
+        // Function to view item details
+        function viewItemDetails(itemId) {
+            loadItemDetails(itemId);
+            switchView('detail-view');
+        }
+
+        // Function to load item details
+        function loadItemDetails(itemId) {
+            currentItemId = itemId;
+            const item = inventoryItems.find(i => i._id === itemId);
+            
+            if (item) {
+                displayItemDetails(item);
+            } else {
+                fetch(`http://localhost:3000/api/inventory/${itemId}`)
+                    .then(response => response.json())
+                    .then(item => {
+                        displayItemDetails(item);
+                    })
+                    .catch(error => {
+                        console.error('Error loading item details:', error);
+                        // For demo purposes, display a sample item if API is not available
+                        const sampleItem = {
+                            _id: itemId,
+                            product: { 
+                                _id: 'DEMO',
+                                name: 'Sample Item',
+                                sku: 'SAMPLE001',
+                                price: 49.99
+                            },
+                            stock: 15,
+                            lastUpdated: new Date()
+                        };
+                        displayItemDetails(sampleItem);
+                    });
+            }
+        }
+
+        // Function to display item details
+        function displayItemDetails(item) {
+            const detailsContainer = document.getElementById('item-details');
+            
+            // Format the date if available
+            const updatedDate = item.lastUpdated ? new Date(item.lastUpdated).toLocaleString() : 'N/A';
+            
+            detailsContainer.innerHTML = `
+                <h3>${item.product.name}</h3>
+                
+                <div class="detail-row">
+                    <div class="detail-label">SKU:</div>
+                    <div class="detail-value">${item.product.sku}</div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Quantity:</div>
+                    <div class="detail-value">${item.stock}</div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Status:</div>
+                    <div class="detail-value">${getStatusText(item.stock)}</div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Last Updated:</div>
+                    <div class="detail-value">${updatedDate}</div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Item ID:</div>
+                    <div class="detail-value">${item._id}</div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Product ID:</div>
+                    <div class="detail-value">${item.product._id}</div>
+                </div>
+                
+                <div class="buttons" style="margin-top: 20px;">
+                    <button class="btn-info" onclick="adjustStock('${item._id}', 'add')">Add Stock</button>
+                    <button class="btn-warning" onclick="adjustStock('${item._id}', 'remove')">Remove Stock</button>
+                </div>
+            `;
+        }
+
+        // Function to update inventory
+        function updateInventory() {
+            const form = document.getElementById('inventory-form');
+            const stock = parseInt(form.quantity.value);
+            const productId = form.product.value;
+            
+            if (!productId) {
+                alert('Please select a product');
+                return;
+            }
+            
+            const item = {
+                product: productId,
+                stockQuantity: stock
+            };
+            
+            fetch('http://localhost:3000/api/inventory', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(item)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Inventory updated successfully!');
+                form.reset();
+                loadInventory();
+            })
+            .catch(error => {
+                console.error('Error updating inventory:', error);
+                alert('Failed to update inventory. Please try again.');
+                // For demo, update local array and refresh
+                const product = products.find(p => p._id === productId);
+                if (product) {
+                    // Create a new inventory item
+                    const newItem = {
+                        _id: Date.now().toString(),
+                        product: product,
+                        stock: stock,
+                        lastUpdated: new Date()
+                    };
+                    inventoryItems.push(newItem);
+                    displayInventory();
+                    form.reset();
+                    alert('Inventory updated (demo mode)');
+                }
+            });
+        }
+
+        // Function to adjust stock (add or remove)
+        function adjustStock(id, action) {
+            const item = inventoryItems.find(i => i._id === id);
+            if (!item) return;
+            
+            let quantity = 0;
+            if (action === 'add') {
+                quantity = parseInt(prompt('Enter quantity to add:', '1')) || 0;
+            } else {
+                quantity = parseInt(prompt('Enter quantity to remove:', '1')) || 0;
+            }
+            
+            if (quantity <= 0) return;
+            
+            if (action === 'remove' && quantity > item.stock) {
+                alert('Cannot remove more than available quantity');
+                return;
+            }
+            
+            // Calculate new stock quantity
+            const newStock = action === 'add' ? item.stock + quantity : item.stock - quantity;
+            
+            fetch(`http://localhost:3000/api/inventory/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ stockQuantity: newStock })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(`Stock ${action === 'add' ? 'added' : 'removed'} successfully!`);
+                loadInventory();
+                if (currentItemId === id) {
+                    loadItemDetails(id);
+                }
+            })
+            .catch(error => {
+                console.error(`Error ${action === 'add' ? 'adding' : 'removing'} stock:`, error);
+                // For demo, update local array and refresh
+                if (action === 'add') {
+                    item.stock += quantity;
+                } else {
+                    item.stock -= quantity;
+                }
+                item.lastUpdated = new Date();
+                displayInventory();
+                if (currentItemId === id) {
+                    loadItemDetails(id);
+                }
+                alert(`Stock ${action === 'add' ? 'added' : 'removed'} (demo mode)`);
+            });
+        }
+
+        // Function to delete an item
+        function deleteItem(id) {
+            if (confirm('Are you sure you want to delete this inventory item?')) {
+                fetch(`http://localhost:3000/api/inventory/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Inventory item deleted successfully!');
+                        loadInventory();
+                    } else {
+                        throw new Error('Failed to delete inventory item');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting inventory item:', error);
+                    // For demo, remove from local array and refresh
+                    inventoryItems = inventoryItems.filter(item => item._id !== id);
+                    displayInventory();
+                    alert('Inventory item deleted (demo mode)');
+                });
+            }
+        }
+
+        // Handle browser back button
+        window.addEventListener('popstate', function(event) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const itemId = urlParams.get('id');
+            
+            if (itemId) {
+                loadItemDetails(itemId);
+                switchView('detail-view');
+            } else {
+                switchView(lastActiveView);
+            }
+        });
+    </script>
+</body>
+</html>
