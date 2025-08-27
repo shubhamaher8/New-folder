@@ -434,14 +434,6 @@
                 })
                 .catch(error => {
                     console.error('Error loading products:', error);
-                    // For demo purposes, add some sample products if API is not available
-                    products = [
-                        { _id: '1', name: 'Sample Product 1', sku: 'ELEC001' },
-                        { _id: '2', name: 'Sample Product 2', sku: 'CLOTH001' },
-                        { _id: '3', name: 'Sample Product 3', sku: 'HOME001' },
-                        { _id: '4', name: 'Sample Product 4', sku: 'ELEC002' },
-                        { _id: '5', name: 'Sample Product 5', sku: 'TOYS001' }
-                    ];
                 });
         }
 
@@ -455,34 +447,6 @@
                 })
                 .catch(error => {
                     console.error('Error loading sales:', error);
-                    // For demo purposes, add some sample sales if API is not available
-                    const today = new Date();
-                    const lastMonth = new Date(today);
-                    lastMonth.setMonth(lastMonth.getMonth() - 1);
-                    
-                    sales = [
-                        { 
-                            _id: '1', 
-                            product: { _id: '1', name: 'Sample Product 1', sku: 'ELEC001' }, 
-                            quantitySold: 10, 
-                            totalRevenue: 199.90,
-                            saleDate: today
-                        },
-                        { 
-                            _id: '2', 
-                            product: { _id: '2', name: 'Sample Product 2', sku: 'CLOTH001' }, 
-                            quantitySold: 5, 
-                            totalRevenue: 149.95,
-                            saleDate: today
-                        },
-                        { 
-                            _id: '3', 
-                            product: { _id: '1', name: 'Sample Product 1', sku: 'ELEC001' }, 
-                            quantitySold: 8, 
-                            totalRevenue: 159.92,
-                            saleDate: lastMonth
-                        }
-                    ];
                     updateDashboard();
                 });
         }
@@ -498,25 +462,6 @@
                 })
                 .catch(error => {
                     console.error('Error loading reports:', error);
-                    // For demo purposes, add some sample reports if API is not available
-                    reports = [
-                        { 
-                            _id: '1', 
-                            reportPeriod: 'April 2023', 
-                            totalSales: 25, 
-                            totalRevenue: 599.75,
-                            bestSellingProduct: { _id: '1', name: 'Sample Product 1' },
-                            createdAt: new Date(Date.now() - 2592000000) // 30 days ago
-                        },
-                        { 
-                            _id: '2', 
-                            reportPeriod: 'March 2023', 
-                            totalSales: 18, 
-                            totalRevenue: 429.82,
-                            bestSellingProduct: { _id: '2', name: 'Sample Product 2' },
-                            createdAt: new Date(Date.now() - 5184000000) // 60 days ago
-                        }
-                    ];
                     displayReports();
                     updateDashboard();
                 });
@@ -709,13 +654,6 @@
             .catch(error => {
                 console.error('Error saving report:', error);
                 alert('Failed to save report. Please try again.');
-                // For demo, add to local array and refresh
-                const newReport = {
-                    _id: Date.now().toString(),
-                    ...reportPreviewData,
-                    bestSellingProduct: products.find(p => p._id === reportPreviewData.bestSellingProduct) || null,
-                    createdAt: new Date()
-                };
                 reports.push(newReport);
                 displayReports();
                 document.getElementById('report-form').reset();

@@ -764,15 +764,6 @@
                 })
                 .catch(error => {
                     console.error('Error loading products:', error);
-                    // For demo purposes, add some sample products if API is not available
-                    products = [
-                        { _id: '1', name: 'Sample Product 1', description: 'This is a sample product', price: 19.99, category: 'Electronics', sku: 'ELEC001' },
-                        { _id: '2', name: 'Sample Product 2', description: 'Another sample product', price: 29.99, category: 'Clothing', sku: 'CLOTH001' },
-                        { _id: '3', name: 'Sample Product 3', description: 'Third sample product', price: 39.99, category: 'Home & Kitchen', sku: 'HOME001' },
-                        { _id: '4', name: 'Sample Product 4', description: 'Fourth sample product', price: 49.99, category: 'Electronics', sku: 'ELEC002' },
-                        { _id: '5', name: 'Sample Product 5', description: 'Fifth sample product', price: 59.99, category: 'Toys', sku: 'TOYS001' },
-                        { _id: '6', name: 'Sample Product 6', description: 'Sixth sample product', price: 69.99, category: 'Beauty', sku: 'BEAUTY001' }
-                    ];
                     displayProducts();
                 });
         }
@@ -869,16 +860,6 @@
                     })
                     .catch(error => {
                         console.error('Error loading product details:', error);
-                        // For demo purposes, display a sample product if API is not available
-                        const sampleProduct = {
-                            _id: productId,
-                            name: 'Sample Product',
-                            description: 'This is a sample product description for demonstration purposes.',
-                            price: 49.99,
-                            category: 'Sample Category',
-                            sku: 'SAMPLE001',
-                            createdAt: '2023-01-01T00:00:00.000Z'
-                        };
                         displayProductDetails(sampleProduct);
                     });
             }

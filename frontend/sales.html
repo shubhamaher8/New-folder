@@ -269,14 +269,6 @@
                 })
                 .catch(error => {
                     console.error('Error loading products:', error);
-                    // For demo purposes, add some sample products if API is not available
-                    products = [
-                        { _id: '1', name: 'Sample Product 1', sku: 'ELEC001', price: 19.99 },
-                        { _id: '2', name: 'Sample Product 2', sku: 'CLOTH001', price: 29.99 },
-                        { _id: '3', name: 'Sample Product 3', sku: 'HOME001', price: 39.99 },
-                        { _id: '4', name: 'Sample Product 4', sku: 'ELEC002', price: 49.99 },
-                        { _id: '5', name: 'Sample Product 5', sku: 'TOYS001', price: 59.99 }
-                    ];
                     populateProductDropdown();
                 });
         }
@@ -322,36 +314,6 @@
                 })
                 .catch(error => {
                     console.error('Error loading sales:', error);
-                    // For demo purposes, add some sample sales if API is not available
-                    const today = new Date();
-                    const yesterday = new Date(today);
-                    yesterday.setDate(yesterday.getDate() - 1);
-                    const twoDaysAgo = new Date(today);
-                    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-                    
-                    sales = [
-                        { 
-                            _id: '1', 
-                            product: { _id: '1', name: 'Sample Product 1', sku: 'ELEC001' }, 
-                            quantitySold: 5, 
-                            totalRevenue: 99.95,
-                            saleDate: today
-                        },
-                        { 
-                            _id: '2', 
-                            product: { _id: '2', name: 'Sample Product 2', sku: 'CLOTH001' }, 
-                            quantitySold: 3, 
-                            totalRevenue: 89.97,
-                            saleDate: yesterday
-                        },
-                        { 
-                            _id: '3', 
-                            product: { _id: '1', name: 'Sample Product 1', sku: 'ELEC001' }, 
-                            quantitySold: 2, 
-                            totalRevenue: 39.98,
-                            saleDate: twoDaysAgo
-                        }
-                    ];
                     displaySales();
                     updateDashboard();
                 });
@@ -479,21 +441,9 @@
             .catch(error => {
                 console.error('Error recording sale:', error);
                 alert('Failed to record sale. Please try again.');
-                // For demo, add to local array and refresh
-                const product = products.find(p => p._id === productId);
-                
-                const newSale = {
-                    _id: Date.now().toString(),
-                    product: product,
-                    quantitySold: quantitySold,
-                    totalRevenue: totalRevenue,
-                    saleDate: new Date()
-                };
-                sales.push(newSale);
-                displaySales();
                 updateDashboard();
                 form.reset();
-                alert('Sale recorded (demo mode)');
+            
             });
         }
 
@@ -529,8 +479,6 @@
                 })
                 .catch(error => {
                     console.error('Error deleting sale:', error);
-                    // For demo, remove from local array and refresh
-                    sales = sales.filter(sale => sale._id !== id);
                     displaySales();
                     updateDashboard();
                     alert('Sale deleted (demo mode)');

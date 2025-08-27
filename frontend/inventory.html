@@ -499,14 +499,6 @@
                 })
                 .catch(error => {
                     console.error('Error loading products:', error);
-                    // For demo purposes, add some sample products if API is not available
-                    products = [
-                        { _id: '1', name: 'Sample Product 1', sku: 'ELEC001', price: 19.99, description: 'This is a sample product' },
-                        { _id: '2', name: 'Sample Product 2', sku: 'CLOTH001', price: 29.99, description: 'Another sample product' },
-                        { _id: '3', name: 'Sample Product 3', sku: 'HOME001', price: 39.99, description: 'Third sample product' },
-                        { _id: '4', name: 'Sample Product 4', sku: 'ELEC002', price: 49.99, description: 'Fourth sample product' },
-                        { _id: '5', name: 'Sample Product 5', sku: 'TOYS001', price: 59.99, description: 'Fifth sample product' }
-                    ];
                     populateProductDropdown();
                 });
         }
@@ -534,14 +526,6 @@
                 })
                 .catch(error => {
                     console.error('Error loading inventory:', error);
-                    // For demo purposes, add some sample inventory items if API is not available
-                    inventoryItems = [
-                        { _id: '1', product: { _id: '1', name: 'Sample Product 1', sku: 'ELEC001' }, stock: 25, lastUpdated: new Date() },
-                        { _id: '2', product: { _id: '2', name: 'Sample Product 2', sku: 'CLOTH001' }, stock: 5, lastUpdated: new Date() },
-                        { _id: '3', product: { _id: '3', name: 'Sample Product 3', sku: 'HOME001' }, stock: 0, lastUpdated: new Date() },
-                        { _id: '4', product: { _id: '4', name: 'Sample Product 4', sku: 'ELEC002' }, stock: 50, lastUpdated: new Date() },
-                        { _id: '5', product: { _id: '5', name: 'Sample Product 5', sku: 'TOYS001' }, stock: 12, lastUpdated: new Date() }
-                    ];
                     displayInventory();
                 });
         }
@@ -633,18 +617,6 @@
                     })
                     .catch(error => {
                         console.error('Error loading item details:', error);
-                        // For demo purposes, display a sample item if API is not available
-                        const sampleItem = {
-                            _id: itemId,
-                            product: { 
-                                _id: 'DEMO',
-                                name: 'Sample Item',
-                                sku: 'SAMPLE001',
-                                price: 49.99
-                            },
-                            stock: 15,
-                            lastUpdated: new Date()
-                        };
                         displayItemDetails(sampleItem);
                     });
             }

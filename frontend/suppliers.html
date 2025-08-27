@@ -269,15 +269,6 @@
                     populateProductDropdown();
                 })
                 .catch(error => {
-                    console.error('Error loading products:', error);
-                    // For demo purposes, add some sample products if API is not available
-                    products = [
-                        { _id: '1', name: 'Sample Product 1', sku: 'ELEC001' },
-                        { _id: '2', name: 'Sample Product 2', sku: 'CLOTH001' },
-                        { _id: '3', name: 'Sample Product 3', sku: 'HOME001' },
-                        { _id: '4', name: 'Sample Product 4', sku: 'ELEC002' },
-                        { _id: '5', name: 'Sample Product 5', sku: 'TOYS001' }
-                    ];
                     populateProductDropdown();
                 });
         }
@@ -356,34 +347,6 @@
                 })
                 .catch(error => {
                     console.error('Error loading suppliers:', error);
-                    // For demo purposes, add some sample suppliers if API is not available
-                    suppliers = [
-                        { 
-                            _id: '1', 
-                            name: 'ABC Electronics', 
-                            contactInfo: { 
-                                email: 'contact@abcelectronics.com', 
-                                phone: '123-456-7890', 
-                                address: '123 Main St, City, Country' 
-                            },
-                            productsSupplied: [
-                                { _id: '1', name: 'Sample Product 1', sku: 'ELEC001' },
-                                { _id: '4', name: 'Sample Product 4', sku: 'ELEC002' }
-                            ]
-                        },
-                        { 
-                            _id: '2', 
-                            name: 'XYZ Clothing', 
-                            contactInfo: { 
-                                email: 'info@xyzclothing.com', 
-                                phone: '987-654-3210', 
-                                address: '456 Oak St, Town, Country' 
-                            },
-                            productsSupplied: [
-                                { _id: '2', name: 'Sample Product 2', sku: 'CLOTH001' }
-                            ]
-                        }
-                    ];
                     displaySuppliers();
                 });
         }
@@ -453,19 +416,6 @@
             .catch(error => {
                 console.error('Error adding supplier:', error);
                 alert('Failed to add supplier. Please try again.');
-                // For demo, add to local array and refresh
-                const newSupplier = {
-                    _id: Date.now().toString(),
-                    name,
-                    contactInfo: {
-                        email,
-                        phone,
-                        address
-                    },
-                    productsSupplied: selectedProducts
-                };
-                suppliers.push(newSupplier);
-                displaySuppliers();
                 form.reset();
                 selectedProducts = [];
                 updateSelectedProductsDisplay();
@@ -494,10 +444,6 @@
                 })
                 .catch(error => {
                     console.error('Error deleting supplier:', error);
-                    // For demo, remove from local array and refresh
-                    suppliers = suppliers.filter(supplier => supplier._id !== id);
-                    displaySuppliers();
-                    alert('Supplier deleted (demo mode)');
                 });
             }
         }

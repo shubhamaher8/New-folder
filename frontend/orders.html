@@ -319,14 +319,6 @@
                 })
                 .catch(error => {
                     console.error('Error loading products:', error);
-                    // For demo purposes, add some sample products if API is not available
-                    products = [
-                        { _id: '1', name: 'Sample Product 1', sku: 'ELEC001', price: 19.99 },
-                        { _id: '2', name: 'Sample Product 2', sku: 'CLOTH001', price: 29.99 },
-                        { _id: '3', name: 'Sample Product 3', sku: 'HOME001', price: 39.99 },
-                        { _id: '4', name: 'Sample Product 4', sku: 'ELEC002', price: 49.99 },
-                        { _id: '5', name: 'Sample Product 5', sku: 'TOYS001', price: 59.99 }
-                    ];
                     populateProductDropdown();
                 });
         }
@@ -355,11 +347,6 @@
                 })
                 .catch(error => {
                     console.error('Error loading suppliers:', error);
-                    // For demo purposes, add some sample suppliers if API is not available
-                    suppliers = [
-                        { _id: '1', name: 'ABC Electronics' },
-                        { _id: '2', name: 'XYZ Clothing' }
-                    ];
                     populateSupplierDropdown();
                 });
         }
@@ -403,27 +390,6 @@
                 })
                 .catch(error => {
                     console.error('Error loading orders:', error);
-                    // For demo purposes, add some sample orders if API is not available
-                    orders = [
-                        { 
-                            _id: '1', 
-                            product: { _id: '1', name: 'Sample Product 1', sku: 'ELEC001' }, 
-                            quantity: 10, 
-                            totalPrice: 199.90,
-                            supplier: { _id: '1', name: 'ABC Electronics' },
-                            status: 'Pending',
-                            orderDate: new Date(Date.now() - 86400000) // yesterday
-                        },
-                        { 
-                            _id: '2', 
-                            product: { _id: '2', name: 'Sample Product 2', sku: 'CLOTH001' }, 
-                            quantity: 5, 
-                            totalPrice: 149.95,
-                            supplier: { _id: '2', name: 'XYZ Clothing' },
-                            status: 'Completed',
-                            orderDate: new Date(Date.now() - 172800000) // 2 days ago
-                        }
-                    ];
                     displayOrders();
                 });
         }

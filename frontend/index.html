@@ -372,8 +372,8 @@
                     <i class="material-icons">star</i>
                 </div>
                 <div class="card-title">Best Selling Product</div>
-                <div class="card-value">Gaming Mouse</div>
-                <div class="card-info">250 units sold this month</div>
+                <div class="card-value">Item</div>
+                <div class="card-info">Best sold this month</div>
             </div>
         </div>
 
@@ -484,14 +484,6 @@
                 })
                 .catch(error => {
                     console.error('Error loading products:', error);
-                    // Fallback for demo purposes
-                    products = [
-                        { _id: '1', name: 'Sample Product 1', isDefective: false },
-                        { _id: '2', name: 'Sample Product 2', isDefective: true },
-                        { _id: '3', name: 'Sample Product 3', isDefective: false },
-                        { _id: '4', name: 'Sample Product 4', isDefective: true },
-                        { _id: '5', name: 'Sample Product 5', isDefective: false }
-                    ];
                     updateProductsCount();
                     updateDefectiveCount();
                 });
@@ -507,42 +499,26 @@
                 })
                 .catch(error => {
                     console.error('Error loading orders:', error);
-                    // Fallback for demo purposes
-                    orders = [
-                        { _id: '1', status: 'Pending' },
-                        { _id: '2', status: 'Completed' },
-                        { _id: '3', status: 'Pending' },
-                        { _id: '4', status: 'Cancelled' }
-                    ];
                     updatePendingOrdersCount();
                 });
         }
 
         // Function to load sales data
         function loadSales() {
-            // Hardcoded sample data
-            const currentDate = new Date();
-            sales = [];
-            
-            // Generate 30 days of sample data
-            for (let i = 30; i >= 0; i--) {
-                const saleDate = new Date(currentDate);
-                saleDate.setDate(saleDate.getDate() - i);
-                
-                // Generate random revenue between 1000 and 5000
-                const randomRevenue = Math.floor(Math.random() * 4000) + 1000;
-                
-                sales.push({
-                    _id: i.toString(),
-                    totalRevenue: randomRevenue,
-                    saleDate: saleDate,
-                    quantitySold: Math.floor(randomRevenue / 100) // Rough estimate of quantity
+            fetch('http://localhost:3000/api/sales')
+                .then(response => response.json())
+                .then(data => {
+                    sales = data;
+                    updateMonthlySales();
+                    updateSalesChart(currentPeriod);
+                     updateBestSellingProduct();
+                })
+                .catch(error => {
+                    console.error('Error loading sales:', error);
+                    updateMonthlySales();
+                    updateSalesChart(currentPeriod);
+                    updateBestSellingProduct(); 
                 });
-            }
-            
-            // Update the UI
-            updateMonthlySales();
-            updateSalesChart(currentPeriod);
         }
 
         // Function to load inventory data
@@ -555,14 +531,6 @@
                 })
                 .catch(error => {
                     console.error('Error loading inventory:', error);
-                    // Fallback for demo purposes
-                    inventory = [
-                        { _id: '1', product: { name: 'Sample Product 1' }, quantity: 5 },
-                        { _id: '2', product: { name: 'Sample Product 2' }, quantity: 2 },
-                        { _id: '3', product: { name: 'Sample Product 3' }, quantity: 15 },
-                        { _id: '4', product: { name: 'Sample Product 4' }, quantity: 0 },
-                        { _id: '5', product: { name: 'Sample Product 5' }, quantity: 3 }
-                    ];
                     updateLowStockCount();
                 });
         }
@@ -608,7 +576,48 @@
             document.getElementById('defective-products').textContent = defectiveCount;
         }
 
-        // Recent Activity function removed as there is no backend implementation
+        // Function to update the best selling product card
+        function updateBestSellingProduct() {
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth();
+            const currentYear = currentDate.getFullYear();
+    
+            // Filter sales for current month
+            const currentMonthSales = sales.filter(sale => {
+                const saleDate = new Date(sale.saleDate);
+                return saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear;
+            });
+    
+            if (currentMonthSales.length === 0) {
+                document.getElementById('best-selling-product').textContent = 'No sales this month';
+                document.getElementById('best-selling-info').textContent = '0 units sold';
+                return;
+            }
+    
+            // Aggregate quantity sold by product (assuming sales have 'productName' or 'productId')
+            const productSales = {};
+            currentMonthSales.forEach(sale => {
+                const productKey = sale.productName || (products.find(p => p._id === sale.productId)?.name || 'Unknown');
+                if (!productSales[productKey]) {
+                    productSales[productKey] = 0;
+                }
+                productSales[productKey] += sale.quantitySold || 0;
+            });
+    
+            // Find the product with the highest sales
+            let bestProduct = null;
+            let maxSales = 0;
+            for (const [product, salesCount] of Object.entries(productSales)) {
+                if (salesCount > maxSales) {
+                    maxSales = salesCount;
+                    bestProduct = product;
+                }
+            }
+    
+            // Update the card
+            document.getElementById('best-selling-product').textContent = bestProduct || 'Unknown';
+            document.getElementById('best-selling-info').textContent = `${maxSales} units sold this month`;
+        }
 
         // Function to set up chart filters
         function setupChartFilters() {
@@ -786,18 +795,38 @@
         }
 
         // Function to update the top products chart
-        function updateTopProductsChart() {
-            // Hardcoded sample data for top products
-            const topProducts = [
-                { name: 'Gaming Mouse', sales: 250, revenue: 12500 },
-                { name: 'Wireless Mouse', sales: 180, revenue: 7200 },
-                { name: 'Premium T-shirt', sales: 160, revenue: 4800 },
-                { name: 'Basic T-shirt', sales: 145, revenue: 2900 },
-                { name: 'RGB Mouse', sales: 120, revenue: 7200 },
-                { name: 'Ergonomic Mouse', sales: 110, revenue: 5500 }
-            ];
+        function updateTopProductsChart(isSalesView = true) {
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth();
+            const currentYear = currentDate.getFullYear();
+    
+            // Filter sales for current month
+            const currentMonthSales = sales.filter(sale => {
+                const saleDate = new Date(sale.saleDate);
+                return saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear;
+            });
+    
+            // Aggregate by product
+            const productSales = {};
+            const productRevenue = {};
+            currentMonthSales.forEach(sale => {
+                const productKey = sale.productName || (products.find(p => p._id === sale.productId)?.name || 'Unknown');
+                if (!productSales[productKey]) {
+                    productSales[productKey] = 0;
+                    productRevenue[productKey] = 0;
+                }
+                productSales[productKey] += sale.quantitySold || 0;
+                productRevenue[productKey] += sale.totalRevenue || 0;
+            });
+    
+            // Sort and get top 6 products
+            const sortedProducts = Object.entries(productSales)
+                .map(([name, sales]) => ({ name, sales, revenue: productRevenue[name] }))
+                .sort((a, b) => (isSalesView ? b.sales - a.sales : b.revenue - a.revenue))
+                .slice(0, 6);
+            
 
-            // Create a simple bar chart
+            // Create the chart
             const ctx = document.getElementById('products-chart').getContext('2d');
             if (window.topProductsChart) {
                 window.topProductsChart.destroy();
