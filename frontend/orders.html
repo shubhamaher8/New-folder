@@ -312,7 +312,7 @@
 
         // Function to load products for the dropdown
         function loadProducts() {
-            fetch('http://localhost:3000/api/products')
+            fetch('https://backend-6rhn.onrender.com/api/products')
                 .then(response => response.json())
                 .then(data => {
                     products = data;
@@ -340,7 +340,7 @@
 
         // Function to load suppliers for the dropdown
         function loadSuppliers() {
-            fetch('http://localhost:3000/api/suppliers')
+            fetch('https://backend-6rhn.onrender.com/api/suppliers')
                 .then(response => response.json())
                 .then(data => {
                     suppliers = data;
@@ -383,7 +383,7 @@
 
         // Function to load orders from API
         function loadOrders() {
-            fetch('http://localhost:3000/api/orders')
+            fetch('https://backend-6rhn.onrender.com/api/orders')
                 .then(response => response.json())
                 .then(data => {
                     orders = data;
@@ -436,7 +436,7 @@
                 status: 'Pending'
             };
             
-            fetch('http://localhost:3000/api/orders', {
+            fetch('https://backend-6rhn.onrender.com/api/orders', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -480,7 +480,7 @@
             if (order) {
                 showOrderDetailsModal(order);
             } else {
-                fetch(`http://localhost:3000/api/orders/${orderId}`)
+                fetch(`https://backend-6rhn.onrender.com/api/orders/${orderId}`)
                     .then(response => response.json())
                     .then(order => {
                         showOrderDetailsModal(order);
@@ -560,7 +560,7 @@
         function updateOrderStatus(status) {
             if (!currentOrderId) return;
             
-            fetch(`http://localhost:3000/api/orders/${currentOrderId}`, {
+            fetch(`https://backend-6rhn.onrender.com/api/orders/${currentOrderId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

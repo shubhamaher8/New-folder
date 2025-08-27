@@ -498,7 +498,7 @@
 
         // Function to load products data
         function loadProducts() {
-            fetch('http://localhost:3000/api/products')
+            fetch('https://backend-6rhn.onrender.com/api/products')
                 .then(response => response.json())
                 .then(data => {
                     products = data;
@@ -514,7 +514,7 @@
 
         // Function to load orders data
         function loadOrders() {
-            fetch('http://localhost:3000/api/orders')
+            fetch('https://backend-6rhn.onrender.com/api/orders')
                 .then(response => response.json())
                 .then(data => {
                     orders = data;
@@ -528,7 +528,7 @@
 
         // Function to load sales data
         function loadSales() {
-            fetch('http://localhost:3000/api/sales')
+            fetch('https://backend-6rhn.onrender.com/api/sales')
                 .then(response => response.json())
                 .then(data => {
                     sales = data;
@@ -548,7 +548,7 @@
 
         // Function to load inventory data
         function loadInventory() {
-            fetch('http://localhost:3000/api/inventory')
+            fetch('https://backend-6rhn.onrender.com/api/inventory')
                 .then(response => response.json())
                 .then(data => {
                     inventory = data;
