@@ -615,6 +615,7 @@
                 font-size: 11px;
                 margin: 0;
                 width: 100%;
+                margin-bottom: 10px;
             }
             
             /* Responsive Grid */
@@ -710,8 +711,11 @@
             }
             
             .defective-notes {
-                padding: 10px;
+                padding: 10px 12px; /* Add horizontal padding */
                 min-height: 60px;
+                box-sizing: border-box;
+                width: 100%;
+                margin: 0; /* Remove any default margin */
             }
             
             .defective-badge {
@@ -780,6 +784,16 @@
             
             .star-rating.large-stars .star {
                 font-size: 24px;
+            }
+
+            #products-table td.actions {
+            white-space: normal;
+            padding-left: 0;
+            padding-right: 0;
+            }
+
+            #products-table td.actions::before {
+            display: none;
             }
         }
 

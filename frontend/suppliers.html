@@ -226,6 +226,7 @@
                 font-size: 11px;
                 margin: 0;
                 width: 100%;
+                margin-bottom: 10px;
             }
             
             /* Form Responsive */
@@ -268,6 +269,20 @@
                 margin: 3px;
                 font-size: 12px;
             }
+
+            #suppliers-table td.actions {
+            white-space: normal;
+            padding-left: 0;
+            padding-right: 0;
+            }
+
+            #suppliers-table td.actions::before {
+            display: none;
+            }
+
+            #suppliers-table td[data-label="Products Supplied"] {
+            white-space: normal; 
+}
         }
 
         @media (max-width: 480px) {
