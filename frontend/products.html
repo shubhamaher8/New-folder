@@ -538,6 +538,342 @@
             color: #333;
             display: block;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            header {
+                padding: 8px 15px;
+                margin-bottom: 15px;
+            }
+            
+            header h1 {
+                font-size: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 5px;
+                padding: 8px;
+            }
+            
+            .nav-links a {
+                padding: 6px 10px;
+                margin: 2px;
+                font-size: 12px;
+                flex: 1;
+                min-width: 80px;
+                text-align: center;
+            }
+            
+            h2 {
+                font-size: 18px;
+                margin-top: 20px;
+            }
+            
+            h3 {
+                font-size: 16px;
+            }
+            
+            .view-mode-toggle {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .view-mode-toggle button {
+                margin: 0;
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            
+            /* Responsive Table */
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px 6px;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .actions button {
+                padding: 6px 8px;
+                font-size: 11px;
+                margin: 0;
+                width: 100%;
+            }
+            
+            /* Responsive Grid */
+            .product-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .product-card {
+                padding: 15px;
+            }
+            
+            .product-name {
+                font-size: 16px;
+            }
+            
+            .product-price {
+                font-size: 18px;
+            }
+            
+            .product-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .product-action {
+                width: 100%;
+                padding: 10px;
+            }
+            
+            /* Form Responsive */
+            .form-group {
+                margin-bottom: 12px;
+            }
+            
+            input, select, textarea {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            button {
+                padding: 12px 20px;
+                font-size: 14px;
+                margin-bottom: 10px;
+                width: 100%;
+            }
+            
+            /* Modal Responsive */
+            .modal-content {
+                width: 90%;
+                margin: 5% auto;
+                padding: 15px;
+            }
+            
+            .close {
+                font-size: 24px;
+            }
+            
+            /* Rating Styles Mobile */
+            .rating-section {
+                padding: 12px;
+                margin: 15px 0;
+            }
+            
+            .star-rating .star {
+                font-size: 24px;
+            }
+            
+            .star-rating.large-stars .star {
+                font-size: 28px;
+            }
+            
+            .rating-form {
+                padding: 15px;
+            }
+            
+            .rating-form textarea {
+                padding: 10px;
+            }
+            
+            .rating-item {
+                padding: 12px;
+            }
+            
+            /* Status Section Mobile */
+            .status-section {
+                padding: 15px;
+                margin: 15px 0;
+            }
+            
+            .defective-toggle {
+                padding: 12px;
+            }
+            
+            .defective-notes {
+                padding: 10px;
+                min-height: 60px;
+            }
+            
+            .defective-badge {
+                font-size: 11px;
+                padding: 3px 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+            }
+            
+            .nav-links a {
+                margin: 1px 0;
+                padding: 8px;
+            }
+            
+            table {
+                font-size: 11px;
+            }
+            
+            th, td {
+                padding: 6px 4px;
+            }
+            
+            .product-card {
+                padding: 12px;
+            }
+            
+            .product-name {
+                font-size: 14px;
+            }
+            
+            .product-price {
+                font-size: 16px;
+            }
+            
+            button {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+            
+            input, select, textarea {
+                padding: 8px;
+                font-size: 13px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 2% auto;
+                padding: 12px;
+            }
+            
+            .star-rating .star {
+                font-size: 20px;
+            }
+            
+            .star-rating.large-stars .star {
+                font-size: 24px;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            button {
+                min-height: 44px;
+            }
+            
+            .nav-links a {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .close {
+                min-height: 44px;
+                min-width: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .product-card {
+                cursor: pointer;
+            }
+            
+            .product-card:hover {
+                transform: none;
+            }
+            
+            .star {
+                min-height: 44px;
+                min-width: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* Table responsive behavior for very small screens */
+        @media (max-width: 600px) {
+            #products-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            #products-table thead,
+            #products-table tbody,
+            #products-table tr,
+            #products-table th,
+            #products-table td {
+                display: block;
+            }
+            
+            #products-table thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            
+            #products-table tr {
+                border: 1px solid #ccc;
+                margin-bottom: 10px;
+                padding: 10px;
+                background: #f9f9f9;
+            }
+            
+            #products-table td {
+                border: none;
+                position: relative;
+                padding-left: 50%;
+                text-align: left;
+                min-height: 30px;
+            }
+            
+            #products-table td:before {
+                content: attr(data-label) ": ";
+                position: absolute;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+            }
+            
+            .actions {
+                position: static;
+                width: 100%;
+                padding-left: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -786,7 +1122,7 @@
                     row.classList.add('defective');
                 }
                 row.innerHTML = `
-                    <td>
+                    <td data-label="Name">
                         <div style="display: flex; align-items: center;">
                             <a href="javascript:void(0)" onclick="viewProductDetails('${product._id}')">
                                 ${product.name}
@@ -794,10 +1130,10 @@
                             ${product.isDefective ? '<span class="defective-badge"><i class="material-icons">warning</i>Defective</span>' : ''}
                         </div>
                     </td>
-                    <td>${product.sku}</td>
-                    <td>$${product.price.toFixed(2)}</td>
-                    <td>${product.category || '-'}</td>
-                    <td class="actions">
+                    <td data-label="SKU">${product.sku}</td>
+                    <td data-label="Price">$${product.price.toFixed(2)}</td>
+                    <td data-label="Category">${product.category || '-'}</td>
+                    <td class="actions" data-label="Actions">
                         <button class="btn-info" onclick="viewProductDetails('${product._id}')">View Details</button>
                         <button class="btn-info" onclick="editProduct('${product._id}')">Edit</button>
                         <button class="btn-danger" onclick="deleteProduct('${product._id}')">Delete</button>

@@ -294,6 +294,289 @@
         .transaction-quantity {
             margin-left: 10px;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            header {
+                padding: 8px 15px;
+                margin-bottom: 15px;
+            }
+            
+            header h1 {
+                font-size: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 5px;
+                padding: 8px;
+            }
+            
+            .nav-links a {
+                padding: 6px 10px;
+                margin: 2px;
+                font-size: 12px;
+                flex: 1;
+                min-width: 80px;
+                text-align: center;
+            }
+            
+            h2 {
+                font-size: 18px;
+                margin-top: 20px;
+            }
+            
+            h3 {
+                font-size: 16px;
+            }
+            
+            .view-mode-toggle {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .view-mode-toggle button {
+                margin: 0;
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            
+            /* Responsive Table */
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px 6px;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .actions button {
+                padding: 6px 8px;
+                font-size: 11px;
+                margin: 0;
+                width: 100%;
+            }
+            
+            /* Responsive Grid */
+            .inventory-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .inventory-card {
+                padding: 15px;
+            }
+            
+            .item-name {
+                font-size: 16px;
+            }
+            
+            .item-quantity {
+                font-size: 14px;
+            }
+            
+            .item-action {
+                width: 100%;
+                text-align: center;
+                padding: 10px;
+                margin-top: 10px;
+            }
+            
+            /* Form Responsive */
+            .form-group {
+                margin-bottom: 12px;
+            }
+            
+            input, select, textarea {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            button {
+                padding: 12px 20px;
+                font-size: 14px;
+                margin-bottom: 10px;
+                width: 100%;
+            }
+            
+            /* Detail View Responsive */
+            .detail-row {
+                flex-direction: column;
+                gap: 5px;
+                padding: 12px 0;
+            }
+            
+            .detail-label {
+                width: 100%;
+                font-size: 14px;
+            }
+            
+            .detail-value {
+                font-size: 14px;
+            }
+            
+            /* Status Badges */
+            .status-badge {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+            }
+            
+            .nav-links a {
+                margin: 1px 0;
+                padding: 8px;
+            }
+            
+            table {
+                font-size: 11px;
+            }
+            
+            th, td {
+                padding: 6px 4px;
+            }
+            
+            .inventory-card {
+                padding: 12px;
+            }
+            
+            .item-name {
+                font-size: 14px;
+            }
+            
+            .item-quantity {
+                font-size: 12px;
+            }
+            
+            .item-sku {
+                font-size: 11px;
+            }
+            
+            .item-updated {
+                font-size: 11px;
+            }
+            
+            button {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+            
+            input, select, textarea {
+                padding: 8px;
+                font-size: 13px;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            button {
+                min-height: 44px;
+            }
+            
+            .nav-links a {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .inventory-card {
+                cursor: pointer;
+            }
+            
+            .inventory-card:hover {
+                transform: none;
+            }
+            
+            .item-action {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* Table responsive behavior for very small screens */
+        @media (max-width: 600px) {
+            #inventory-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            #inventory-table thead,
+            #inventory-table tbody,
+            #inventory-table tr,
+            #inventory-table th,
+            #inventory-table td {
+                display: block;
+            }
+            
+            #inventory-table thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            
+            #inventory-table tr {
+                border: 1px solid #ccc;
+                margin-bottom: 10px;
+                padding: 10px;
+                background: #f9f9f9;
+            }
+            
+            #inventory-table td {
+                border: none;
+                position: relative;
+                padding-left: 50%;
+                text-align: left;
+                min-height: 30px;
+            }
+            
+            #inventory-table td:before {
+                content: attr(data-label) ": ";
+                position: absolute;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+            }
+            
+            .actions {
+                position: static;
+                width: 100%;
+                padding-left: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -547,12 +830,12 @@
                 const statusClass = getStatusClass(item.stock);
                 
                 row.innerHTML = `
-                    <td><a href="javascript:void(0)" onclick="viewItemDetails('${item._id}')">${item.product.name}</a></td>
-                    <td>${item.product.sku}</td>
-                    <td>${item.stock}</td>
-                    <td>${getStatusText(item.stock)}</td>
-                    <td>${new Date(item.lastUpdated).toLocaleString()}</td>
-                    <td class="actions">
+                    <td data-label="Product"><a href="javascript:void(0)" onclick="viewItemDetails('${item._id}')">${item.product.name}</a></td>
+                    <td data-label="SKU">${item.product.sku}</td>
+                    <td data-label="Quantity">${item.stock}</td>
+                    <td data-label="Status">${getStatusText(item.stock)}</td>
+                    <td data-label="Last Updated">${new Date(item.lastUpdated).toLocaleString()}</td>
+                    <td class="actions" data-label="Actions">
                         <button class="btn-info" onclick="adjustStock('${item._id}', 'add')">+ Add</button>
                         <button class="btn-warning" onclick="adjustStock('${item._id}', 'remove')">- Remove</button>
                         <button class="btn-danger" onclick="deleteItem('${item._id}')">Delete</button>

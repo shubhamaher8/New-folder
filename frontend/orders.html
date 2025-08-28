@@ -200,6 +200,226 @@
         .nav-links a.active {
             background-color: #4CAF50;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            header {
+                padding: 8px 15px;
+                margin-bottom: 15px;
+            }
+            
+            header h1 {
+                font-size: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 5px;
+                padding: 8px;
+            }
+            
+            .nav-links a {
+                padding: 6px 10px;
+                margin: 2px;
+                font-size: 12px;
+                flex: 1;
+                min-width: 80px;
+                text-align: center;
+            }
+            
+            h2 {
+                font-size: 18px;
+                margin-top: 20px;
+            }
+            
+            h3 {
+                font-size: 16px;
+            }
+            
+            /* Responsive Table */
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px 6px;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .actions button {
+                padding: 6px 8px;
+                font-size: 11px;
+                margin: 0;
+                width: 100%;
+            }
+            
+            /* Form Responsive */
+            .form-group {
+                margin-bottom: 12px;
+            }
+            
+            input, select, textarea {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            button {
+                padding: 12px 20px;
+                font-size: 14px;
+                margin-bottom: 10px;
+                width: 100%;
+            }
+            
+            /* Modal Responsive */
+            .modal-content {
+                width: 90%;
+                margin: 5% auto;
+                padding: 15px;
+            }
+            
+            .close {
+                font-size: 24px;
+            }
+            
+            /* Status Badges */
+            .status-badge {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+            }
+            
+            .nav-links a {
+                margin: 1px 0;
+                padding: 8px;
+            }
+            
+            table {
+                font-size: 11px;
+            }
+            
+            th, td {
+                padding: 6px 4px;
+            }
+            
+            button {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+            
+            input, select, textarea {
+                padding: 8px;
+                font-size: 13px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 2% auto;
+                padding: 12px;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            button {
+                min-height: 44px;
+            }
+            
+            .nav-links a {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .close {
+                min-height: 44px;
+                min-width: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* Table responsive behavior for very small screens */
+        @media (max-width: 600px) {
+            #orders-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            #orders-table thead,
+            #orders-table tbody,
+            #orders-table tr,
+            #orders-table th,
+            #orders-table td {
+                display: block;
+            }
+            
+            #orders-table thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            
+            #orders-table tr {
+                border: 1px solid #ccc;
+                margin-bottom: 10px;
+                padding: 10px;
+                background: #f9f9f9;
+            }
+            
+            #orders-table td {
+                border: none;
+                position: relative;
+                padding-left: 50%;
+                text-align: left;
+                min-height: 30px;
+            }
+            
+            #orders-table td:before {
+                content: attr(data-label) ": ";
+                position: absolute;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+            }
+            
+            .actions {
+                position: static;
+                width: 100%;
+                padding-left: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -405,13 +625,13 @@
                 const orderDate = new Date(order.orderDate).toLocaleDateString();
                 
                 row.innerHTML = `
-                    <td>${order.product.name}</td>
-                    <td>${order.quantity}</td>
-                    <td>$${order.totalPrice.toFixed(2)}</td>
-                    <td>${order.supplier ? order.supplier.name : '-'}</td>
-                    <td><span class="status-badge status-${order.status.toLowerCase()}">${order.status}</span></td>
-                    <td>${orderDate}</td>
-                    <td class="actions">
+                    <td data-label="Product">${order.product.name}</td>
+                    <td data-label="Quantity">${order.quantity}</td>
+                    <td data-label="Total Price">$${order.totalPrice.toFixed(2)}</td>
+                    <td data-label="Supplier">${order.supplier ? order.supplier.name : '-'}</td>
+                    <td data-label="Status"><span class="status-badge status-${order.status.toLowerCase()}">${order.status}</span></td>
+                    <td data-label="Order Date">${orderDate}</td>
+                    <td class="actions" data-label="Actions">
                         <button class="btn-info" onclick="viewOrderDetails('${order._id}')">View</button>
                         ${order.status === 'Pending' ? `<button class="btn-danger" onclick="cancelOrder('${order._id}')">Cancel</button>` : ''}
                     </td>

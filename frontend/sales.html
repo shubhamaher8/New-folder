@@ -159,6 +159,230 @@
         .nav-links a.active {
             background-color: #4CAF50;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            header {
+                padding: 8px 15px;
+                margin-bottom: 15px;
+            }
+            
+            header h1 {
+                font-size: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 5px;
+                padding: 8px;
+            }
+            
+            .nav-links a {
+                padding: 6px 10px;
+                margin: 2px;
+                font-size: 12px;
+                flex: 1;
+                min-width: 80px;
+                text-align: center;
+            }
+            
+            h2 {
+                font-size: 18px;
+                margin-top: 20px;
+            }
+            
+            h3 {
+                font-size: 16px;
+            }
+            
+            /* Dashboard Responsive */
+            .dashboard {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .dashboard-card {
+                min-width: auto;
+                padding: 15px;
+            }
+            
+            .card-title {
+                font-size: 13px;
+            }
+            
+            .card-value {
+                font-size: 20px;
+            }
+            
+            .card-trend {
+                font-size: 11px;
+            }
+            
+            /* Responsive Table */
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px 6px;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .actions button {
+                padding: 6px 8px;
+                font-size: 11px;
+                margin: 0;
+                width: 100%;
+            }
+            
+            /* Form Responsive */
+            .form-group {
+                margin-bottom: 12px;
+            }
+            
+            input, select, textarea {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            button {
+                padding: 12px 20px;
+                font-size: 14px;
+                margin-bottom: 10px;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+            }
+            
+            .nav-links a {
+                margin: 1px 0;
+                padding: 8px;
+            }
+            
+            table {
+                font-size: 11px;
+            }
+            
+            th, td {
+                padding: 6px 4px;
+            }
+            
+            .dashboard-card {
+                padding: 12px;
+            }
+            
+            .card-title {
+                font-size: 12px;
+            }
+            
+            .card-value {
+                font-size: 18px;
+            }
+            
+            button {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+            
+            input, select, textarea {
+                padding: 8px;
+                font-size: 13px;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            button {
+                min-height: 44px;
+            }
+            
+            .nav-links a {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* Table responsive behavior for very small screens */
+        @media (max-width: 600px) {
+            #sales-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            #sales-table thead,
+            #sales-table tbody,
+            #sales-table tr,
+            #sales-table th,
+            #sales-table td {
+                display: block;
+            }
+            
+            #sales-table thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            
+            #sales-table tr {
+                border: 1px solid #ccc;
+                margin-bottom: 10px;
+                padding: 10px;
+                background: #f9f9f9;
+            }
+            
+            #sales-table td {
+                border: none;
+                position: relative;
+                padding-left: 50%;
+                text-align: left;
+                min-height: 30px;
+            }
+            
+            #sales-table td:before {
+                content: attr(data-label) ": ";
+                position: absolute;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+            }
+            
+            .actions {
+                position: static;
+                width: 100%;
+                padding-left: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -333,11 +557,11 @@
                 const saleDate = new Date(sale.saleDate).toLocaleDateString();
                 
                 row.innerHTML = `
-                    <td>${sale.product.name}</td>
-                    <td>${sale.quantitySold}</td>
-                    <td>$${sale.totalRevenue.toFixed(2)}</td>
-                    <td>${saleDate}</td>
-                    <td class="actions">
+                    <td data-label="Product">${sale.product.name}</td>
+                    <td data-label="Quantity Sold">${sale.quantitySold}</td>
+                    <td data-label="Revenue">$${sale.totalRevenue.toFixed(2)}</td>
+                    <td data-label="Date">${saleDate}</td>
+                    <td class="actions" data-label="Actions">
                         <button class="btn-info" onclick="viewSaleDetails('${sale._id}')">View</button>
                         <button class="btn-danger" onclick="deleteSale('${sale._id}')">Delete</button>
                     </td>
