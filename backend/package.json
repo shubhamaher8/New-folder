@@ -8,8 +8,8 @@
     "dev": "nodemon server.js"
   },
   "keywords": [],
-  "author": "Aditya",
-  "license": "ISC",
+  "author": "Shubham",
+  "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.5",

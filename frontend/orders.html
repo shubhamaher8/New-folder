@@ -543,7 +543,7 @@
 
         // Function to load products for the dropdown
         function loadProducts() {
-            fetch('https://backend-355x.onrender.com/api/products')
+            fetch('https://smartstock-2irf.onrender.com/api/products')
                 .then(response => response.json())
                 .then(data => {
                     products = data;
@@ -571,7 +571,7 @@
 
         // Function to load suppliers for the dropdown
         function loadSuppliers() {
-            fetch('https://backend-355x.onrender.com/api/suppliers')
+            fetch('https://smartstock-2irf.onrender.com/api/suppliers')
                 .then(response => response.json())
                 .then(data => {
                     suppliers = data;
@@ -614,7 +614,7 @@
 
         // Function to load orders from API
         function loadOrders() {
-            fetch('https://backend-355x.onrender.com/api/orders')
+            fetch('https://smartstock-2irf.onrender.com/api/orders')
                 .then(response => response.json())
                 .then(data => {
                     orders = data;
@@ -667,7 +667,7 @@
                 status: 'Pending'
             };
             
-            fetch('https://backend-355x.onrender.com/api/orders', {
+            fetch('https://smartstock-2irf.onrender.com/api/orders', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -711,7 +711,7 @@
             if (order) {
                 showOrderDetailsModal(order);
             } else {
-                fetch(`https://backend-355x.onrender.com/api/orders/${orderId}`)
+                fetch(`https://smartstock-2irf.onrender.com/api/orders/${orderId}`)
                     .then(response => response.json())
                     .then(order => {
                         showOrderDetailsModal(order);
@@ -791,7 +791,7 @@
         function updateOrderStatus(status) {
             if (!currentOrderId) return;
             
-            fetch(`https://backend-355x.onrender.com/api/orders/${currentOrderId}`, {
+            fetch(`https://smartstock-2irf.onrender.com/api/orders/${currentOrderId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

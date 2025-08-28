@@ -515,7 +515,7 @@
 
         // Function to load products for the dropdown
         function loadProducts() {
-            fetch('https://backend-355x.onrender.com/api/products')
+            fetch('https://smartstock-2irf.onrender.com/api/products')
                 .then(response => response.json())
                 .then(data => {
                     products = data;
@@ -592,7 +592,7 @@
 
         // Function to load suppliers from API
         function loadSuppliers() {
-            fetch('https://backend-355x.onrender.com/api/suppliers')
+            fetch('https://smartstock-2irf.onrender.com/api/suppliers')
                 .then(response => response.json())
                 .then(data => {
                     suppliers = data;
@@ -651,7 +651,7 @@
                 productsSupplied
             };
             
-            fetch('https://backend-355x.onrender.com/api/suppliers', {
+            fetch('https://smartstock-2irf.onrender.com/api/suppliers', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -690,7 +690,7 @@
                 productsSupplied
             };
             
-            fetch(`https://backend-355x.onrender.com/api/suppliers/${editingSupplierId}`, {
+            fetch(`https://smartstock-2irf.onrender.com/api/suppliers/${editingSupplierId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -767,7 +767,7 @@
         // Function to delete a supplier
         function deleteSupplier(id) {
             if (confirm('Are you sure you want to delete this supplier?')) {
-                fetch(`https://backend-355x.onrender.com/api/suppliers/${id}`, {
+                fetch(`https://smartstock-2irf.onrender.com/api/suppliers/${id}`, {
                     method: 'DELETE'
                 })
                 .then(response => {
