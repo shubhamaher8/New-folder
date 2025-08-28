@@ -11,7 +11,7 @@
             font-family: Arial, sans-serif;
             line-height: 1.6;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background-color: #f5f5f5;
         }
         header {
@@ -24,7 +24,10 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         .dashboard-title {
             text-align: center;
@@ -32,44 +35,32 @@
         }
 
         /* Navigation Styles */
-        .main-nav {
-            background-color: #333;
-            position: fixed;
-            width: 250px;
-            height: 100%;
-            left: 0;
-            top: 0;
-            padding-top: 60px;
-            box-shadow: 3px 0 6px rgba(0,0,0,0.1);
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            background-color: #444;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
         }
-        .nav-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .nav-item {
-            padding: 0;
-        }
-        .nav-link {
-            display: block;
-            padding: 15px 20px;
-            color: #fff;
+        .nav-links a {
+            color: white;
             text-decoration: none;
-            border-left: 4px solid transparent;
-            transition: all 0.3s ease;
+            padding: 8px 15px;
+            margin: 0 5px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
         }
-        .nav-link:hover, .nav-link.active {
+        .nav-links a:hover {
             background-color: #4CAF50;
-            border-left-color: #fff;
         }
-        .nav-link i {
-            margin-right: 10px;
+        .nav-links a.active {
+            background-color: #4CAF50;
         }
 
         /* Dashboard Content */
         .main-content {
-            margin-left: 250px;
-            padding: 20px;
+            padding: 0;
         }
 
         /* Dashboard Cards */
@@ -267,19 +258,8 @@
 
         /* Responsive Styles */
         @media (max-width: 992px) {
-            .main-nav {
-                width: 70px;
-                padding-top: 70px;
-            }
-            .nav-link span {
-                display: none;
-            }
-            .nav-link i {
-                margin-right: 0;
-                font-size: 24px;
-            }
             .main-content {
-                margin-left: 70px;
+                margin-left: 0;
             }
             .charts-container {
                 grid-template-columns: 1fr;
@@ -287,8 +267,307 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            header {
+                padding: 8px 15px;
+                margin-bottom: 15px;
+            }
+            
+            header h1 {
+                font-size: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 5px;
+                padding: 8px;
+            }
+            
+            .nav-links a {
+                padding: 6px 10px;
+                margin: 2px;
+                font-size: 12px;
+                flex: 1;
+                min-width: 80px;
+                text-align: center;
+            }
+            
             .dashboard-cards {
                 grid-template-columns: 1fr;
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .shortcuts-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .main-content {
+                padding: 0;
+                margin-left: 0;
+            }
+            
+            .dashboard-title h1 {
+                font-size: 24px;
+                margin-bottom: 5px;
+            }
+            
+            .dashboard-title p {
+                font-size: 14px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .card-icon {
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+            
+            .card-value {
+                font-size: 20px;
+            }
+            
+            .chart-card {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .chart-title {
+                font-size: 16px;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+            
+            .revenue-summary {
+                flex-direction: column;
+                gap: 15px;
+                padding: 10px;
+            }
+            
+            .revenue-item {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .main-content {
+                padding: 0;
+            }
+            
+            .dashboard-title h1 {
+                font-size: 20px;
+            }
+            
+            .dashboard-cards {
+                gap: 12px;
+            }
+            
+            .card {
+                padding: 12px;
+            }
+            
+            .card-icon {
+                font-size: 22px;
+                margin-bottom: 8px;
+            }
+            
+            .card-title {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+            
+            .card-value {
+                font-size: 18px;
+                margin-bottom: 8px;
+            }
+            
+            .card-info {
+                font-size: 12px;
+            }
+            
+            .shortcuts-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .shortcut-card {
+                padding: 15px 10px;
+            }
+            
+            .shortcut-icon {
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+            
+            .shortcut-title {
+                font-size: 14px;
+            }
+            
+            .shortcut-desc {
+                font-size: 12px;
+            }
+            
+            .chart-card {
+                padding: 12px;
+            }
+            
+            .chart-container {
+                height: 200px;
+            }
+            
+            .revenue-value {
+                font-size: 18px;
+            }
+            
+            .revenue-label {
+                font-size: 12px;
+            }
+            
+            .product-item {
+                padding: 8px 0;
+            }
+            
+            .product-name {
+                font-size: 14px;
+            }
+            
+            .product-sales {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .nav-links {
+                flex-direction: column;
+            }
+            
+            .nav-links a {
+                margin: 1px 0;
+                padding: 8px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 0;
+                margin-bottom: 20px;
+            }
+            
+            .dashboard-title h1 {
+                font-size: 18px;
+            }
+            
+            .dashboard-title p {
+                font-size: 12px;
+            }
+            
+            .dashboard-cards {
+                gap: 10px;
+            }
+            
+            .shortcuts-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .card {
+                padding: 10px;
+            }
+            
+            .card-icon {
+                font-size: 20px;
+                margin-bottom: 5px;
+            }
+            
+            .card-title {
+                font-size: 13px;
+            }
+            
+            .card-value {
+                font-size: 16px;
+            }
+            
+            .card-info {
+                font-size: 11px;
+            }
+            
+            .chart-card {
+                padding: 10px;
+            }
+            
+            .chart-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .chart-filters {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .chart-filter {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+            
+            .chart-container {
+                height: 180px;
+            }
+        }
+        
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            button {
+                min-height: 44px;
+            }
+            
+            .nav-links a {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .card, .shortcut-card {
+                cursor: pointer;
+            }
+            
+            .card:hover, .shortcut-card:hover {
+                transform: none;
+            }
+            
+            .chart-filter {
+                min-height: 30px;
+                min-width: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 5px 10px;
             }
         }
     </style>
@@ -297,56 +576,23 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <nav class="main-nav">
-        <ul class="nav-list">
-            <li class="nav-item">
-                <a href="index.html" class="nav-link active">
-                    <i class="material-icons">dashboard</i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="products.html" class="nav-link">
-                    <i class="material-icons">inventory_2</i>
-                    <span>Products</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="inventory.html" class="nav-link">
-                    <i class="material-icons">storefront</i>
-                    <span>Inventory</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="orders.html" class="nav-link">
-                    <i class="material-icons">shopping_cart</i>
-                    <span>Orders</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="suppliers.html" class="nav-link">
-                    <i class="material-icons">local_shipping</i>
-                    <span>Suppliers</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="sales.html" class="nav-link">
-                    <i class="material-icons">point_of_sale</i>
-                    <span>Sales</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="sales-reports.html" class="nav-link">
-                    <i class="material-icons">assessment</i>
-                    <span>Reports</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+    <header>
+        <h1>SmartStock</h1>
+    </header>
 
-    <div class="main-content">
+    <div class="container">
+        <div class="nav-links">
+            <a href="index.html" class="active">Dashboard</a>
+            <a href="products.html">Products</a>
+            <a href="inventory.html">Inventory</a>
+            <a href="orders.html">Orders</a>
+            <a href="suppliers.html">Suppliers</a>
+            <a href="sales.html">Sales</a>
+            <a href="sales-reports.html">Reports</a>
+        </div>
+
         <div class="dashboard-title">
-            <h1>SmartStock Dashboard</h1>
+            <h2>SmartStock Dashboard</h2>
             <p>Welcome to your inventory management system</p>
         </div>
 
@@ -476,6 +722,7 @@
 
         <!-- Recent Activity section removed as there is no backend implementation -->
     </div>
+</div>
 
     <script>
         // Global variables
