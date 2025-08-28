@@ -775,7 +775,7 @@
 
         // Function to load products for the dropdown
         function loadProducts() {
-            fetch('https://smartstock-2irf.onrender.com/api/products')
+            fetch('https://backend-355x.onrender.com/api/products')
                 .then(response => response.json())
                 .then(data => {
                     products = data;
@@ -802,7 +802,7 @@
 
         // Function to load inventory from API
         function loadInventory() {
-            fetch('https://smartstock-2irf.onrender.com/api/inventory')
+            fetch('https://backend-355x.onrender.com/api/inventory')
                 .then(response => response.json())
                 .then(data => {
                     inventoryItems = data;
@@ -894,7 +894,7 @@
             if (item) {
                 displayItemDetails(item);
             } else {
-                fetch(`https://smartstock-2irf.onrender.com/api/inventory/${itemId}`)
+                fetch(`https://backend-355x.onrender.com/api/inventory/${itemId}`)
                     .then(response => response.json())
                     .then(item => {
                         displayItemDetails(item);
@@ -969,7 +969,7 @@
                 stockQuantity: stock
             };
             
-            fetch('https://smartstock-2irf.onrender.com/api/inventory', {
+            fetch('https://backend-355x.onrender.com/api/inventory', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -1025,7 +1025,7 @@
             // Calculate new stock quantity
             const newStock = action === 'add' ? item.stock + quantity : item.stock - quantity;
             
-            fetch(`https://smartstock-2irf.onrender.com/api/inventory/${id}`, {
+            fetch(`https://backend-355x.onrender.com/api/inventory/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -1060,7 +1060,7 @@
         // Function to delete an item
         function deleteItem(id) {
             if (confirm('Are you sure you want to delete this inventory item?')) {
-                fetch(`https://smartstock-2irf.onrender.com/api/inventory/${id}`, {
+                fetch(`https://backend-355x.onrender.com/api/inventory/${id}`, {
                     method: 'DELETE'
                 })
                 .then(response => {

@@ -486,7 +486,7 @@
 
         // Function to load products for the dropdown
         function loadProducts() {
-            fetch('https://smartstock-2irf.onrender.com/api/products')
+            fetch('https://backend-355x.onrender.com/api/products')
                 .then(response => response.json())
                 .then(data => {
                     products = data;
@@ -530,7 +530,7 @@
 
         // Function to load sales from API
         function loadSales() {
-            fetch('https://smartstock-2irf.onrender.com/api/sales')
+            fetch('https://backend-355x.onrender.com/api/sales')
                 .then(response => response.json())
                 .then(data => {
                     sales = data;
@@ -650,7 +650,7 @@
                 totalRevenue: totalRevenue
             };
             
-            fetch('https://smartstock-2irf.onrender.com/api/sales', {
+            fetch('https://backend-355x.onrender.com/api/sales', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -691,7 +691,7 @@
         // Function to delete a sale
         function deleteSale(id) {
             if (confirm('Are you sure you want to delete this sale record?')) {
-                fetch(`https://smartstock-2irf.onrender.com/api/sales/${id}`, {
+                fetch(`https://backend-355x.onrender.com/api/sales/${id}`, {
                     method: 'DELETE'
                 })
                 .then(response => {
